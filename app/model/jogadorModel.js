@@ -15,13 +15,13 @@ module.exports = function(){
     });
   }
 
-  this.insert = function(NM_JOGADOR, STEAM64, CAMINHO_IMG, pool, callback){
+  this.insert = function(STEAM64, BTRID, pool, callback){
     pool().connect((err, client, done) => {
       if(err){
         throw err;
       }
-      let command = 'INSERT INTO TB_JOGADOR(NM_JOGADOR,STEAM64,CAMINHO_IMG,NM_IMG) VALUES($1,$2,$3,$4)';
-      let values = [NM_JOGADOR,STEAM64,CAMINHO_IMG,'iMAGEM DE: '+NM_JOGADOR];
+      let command = 'INSERT INTO TB_JOGADOR(STEAM64, BTRID) VALUES($1, $2)';
+      let values = [STEAM64, BTRID];
       client.query(command,values, callback);
     })
   }

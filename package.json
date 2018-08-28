@@ -1,14 +1,15 @@
 {
-  "name": "steam2.0",
+  "name": "BattleBuff",
   "version": "1.0.0",
-  "description": "Steam API",
+  "description": "Battlerite inhouse",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Matheus Roberto de Jesus Batista",
+  "author": "Matheus Roberto de Jesus Batista, Breno Nunes Galvão",
   "license": "ISC",
   "dependencies": {
+    "battlerite-api": "^1.2.0",
     "consign": "^0.1.6",
     "ejs": "^2.6.1",
     "express": "^4.16.3",

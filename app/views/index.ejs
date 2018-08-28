@@ -17,20 +17,17 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="cool">Foto</td>
-              <th class="cool">Steam64</td>
-                <th class="cool">Nick</td>
+              <th colspan="2" class="cool"><center>Profiles</center></td>
                 </tr>
               </thead>
               <tbody>
-                <%if(typeof steam != "undefined"){%>
-                <%for(var i=0; i < steam.rowCount ; i++){%>
+                <% if(typeof response != "undefined"){ %>
+                <% response.forEach(function(data) { %>
                 <tr>
-                  <td><img width="50px" height="50px" src="<%=steam.rows[i].caminho_img%>" alt="<%=steam.rows[i].nm_img%>"></td>
-                  <td><%=steam.rows[i].steam64%></td>
-                  <td><%= steam.rows[i].nm_jogador%></td>
+                  <td><img width="50px" height="50px" src="<%= ('https://battlerite.club/_Assets/images/avatar/' + data.attributes.stats.picture + '.png') %>"></td>
+                  <td><%= data.attributes.name %></td>
                 </tr>
-                <%}}%>
+                <% })} %>
               </tbody>
             </table>
           </div>

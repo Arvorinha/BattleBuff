@@ -1,0 +1,120 @@
+html, body {
+  height: 100%;
+}
+
+.min-100 {
+    min-height: 100%;
+}
+
+.logo-header{
+  width: 100%;
+}
+
+.form-inline{
+  text-align: center;
+  margin-top: 10px;
+}
+
+.active-key {
+  display: block;
+  margin-bottom: 0px;
+  width: 100%;
+  margin: auto;
+}
+
+.active-key input{
+  width: 75% !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+
+.game{
+  width: 100%;
+}
+
+.head{
+  width: 100px;
+  height: 100px;
+  float: left;
+}
+
+.head img{
+  height: 100px;
+}
+
+.body {
+  padding: 5px 0px 0px 0px;
+  margin-left: 110px;
+  min-height: 100px;
+  margin-bottom: 20px;
+}
+
+.body .title {
+  font-size: 25px;
+}
+
+.body .salas{
+  vertical-align: text-bottom;
+  font-size: 15px;
+  margin-left: 10px;
+
+}
+
+.body form button{
+  margin-top: 10px;
+}
+
+.body .error{
+  display: block;
+  margin-top: 15px;
+}
+
+
+.side-bar {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.side-bar img {
+  display: block;
+  margin: auto;
+  width: 100%;
+  max-width: 180px;
+  margin-bottom: 5px;
+}
+
+.side-bar .profile-body {
+  display: block;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  line-height: 40px;
+  font-size: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.profile-card {
+  margin-top: 10px;
+}
+
+.profile-name {
+  font-size: 30px;
+}
+
+.profile-card .card-header {
+  padding: 0px;
+  color: #839496;
+}
+
+.profile-card .card-body {
+  padding: 0px;
+  padding-left: 10px;
+  text-align: left;
+  color: #839496;
+  background-color: #042630;
+  line-height: 29px;
+  font-size: 19px;
+}
