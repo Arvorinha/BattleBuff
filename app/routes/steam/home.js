@@ -1,14 +1,13 @@
-const BattleriteAPI = require('battlerite-api');
-const api = new BattleriteAPI({
-  apiKey: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5OTFiZGQwMC04MzE4LTAxMzYtY2Q5ZC0wYTU4NjQ2MDA2MjgiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTM0Mzc5MDQxLCJwdWIiOiJzdHVubG9jay1zdHVkaW9zIiwidGl0bGUiOiJiYXR0bGVyaXRlIiwiYXBwIjoidGVzdC02YjVkOTg3ZS05YTRmLTQxYTMtOTZhYy01NzVlMmJmMTBiYWMiLCJzY29wZSI6ImNvbW11bml0eSIsImxpbWl0IjoxMH0.YuEfTLYI64cGq__6qnSSqtXSmKCR_CYGQZnKzKfXdmA',
-});
-
 module.exports = function(app){
   app.get('/', function(req,res){
     var pool = app.config.dbConnection;
-    var steam = app.app.model.jogadorModel;
+    var steam = new app.app.model.JogadorDAO(pool);
+    var battlerite = app.config.battlerite;
     var btsids = [];
-    steam.findAll(pool, function(err,result){
+
+    console.log(req.session.verificarSessao);
+
+    steam.findAll(function(err,result){
       if(err){
         console.log(err.stack);
       }
@@ -19,15 +18,18 @@ module.exports = function(app){
             btsids.push(result.rows[i].btrid);
           }
 
-          api.getPlayersByIds(btsids).then((response) => {
+          battlerite().getPlayersByIds(btsids).then((response) => {
               var results = response.data;
-              res.render('index', { response: results });
+              if(req.session.verificarSessao != 'undefined')
+                res.render('index', { response: results, sessao : req.session.verificarSessao});
+              else
+                res.render('index', { response: results, sessao : false});
           }).catch((error) => {
               console.log(error.response.status);
           });
 
         } else {
-          res.render('index');
+          res.render('index', { sessao : false});
         }
       }
     })

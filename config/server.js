@@ -2,11 +2,16 @@ var express = require('express');
 var app = express();
 var steam = require('steam-login');
 var consign = require('consign');
+var expressSession = require('express-session');
 
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
 
-app.use(require('express-session')({ resave: false, saveUninitialized: false, secret: 'a secret' }));
+app.use(expressSession({
+   resave: false,
+   saveUninitialized: false,
+   secret: 'wsatdgyfjdsfhgj'
+}));
 app.use(steam.middleware({
     realm: 'http://localhost:5000/',
     verify: 'http://localhost:5000/verify',
@@ -18,6 +23,7 @@ consign()
   .include('app/routes')
   .then('config/dbConnection.js')
   .then('app/model')
+  .then('config/battlerite.js')
   .into(app);
 
 module.exports = app;
