@@ -7,14 +7,13 @@ module.exports = function(app){
     var battlerite = app.config.battlerite;
     var steamID = req.user.steamid;
 
-    var sessoes = function sessao(){
+    var sessoes = function(){
       steamDAO.findBySteam64(steamID,async function(err, result){
         if (err) {
           throw err;
         }
         req.session.sessaoAutorizada = true;
         req.session.steamid = result.rows[0].steam64;
-        req.session.nick = result.rows[0].nm_jogador;
         req.session.btrid = result.rows[0].btrid;
         req.session.verificarSessao = true;
         res.redirect('/');
@@ -22,7 +21,7 @@ module.exports = function(app){
     }
 
 
-    steamDAO.findBySteam64(req.user.steamid,async function(err, result){
+    steamDAO.findBySteam64(req.user.steamid, function(err, result){
       if(err){
         console.log(err.stack);
       }
@@ -34,18 +33,24 @@ module.exports = function(app){
         if (result.rowCount == 0) {
           battlerite().getPlayerBySteamId(steamID).then((response) => {
             var btrID = response.data[0].id;
-            var nick = response.data[0].attributes.name;
-            steamDAO.insert(steamID, btrID, nick,async function(err, result){
+            nick = response.data[0].attributes.name;
+            steamDAO.insert(steamID, btrID, function(err, result){
               if (err) {
                 console.log(err);
               }
+              req.session.nick = nick;
               sessoes();
             })
           }).catch((error) => {
               console.log(error.response.status);
           });
         }else {
-          sessoes();
+          battlerite().getPlayerBySteamId(steamID).then((response) => {
+            req.session.nick = response.data[0].attributes.name;
+            sessoes();
+          }).catch((error) => {
+              console.log(error.response.status);
+          });
         }
       }
   });/*

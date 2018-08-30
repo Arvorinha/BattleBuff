@@ -1,13 +1,11 @@
 module.exports = function(app){
   app.get('/', function(req,res){
     var pool = app.config.dbConnection;
-    var steam = new app.app.model.JogadorDAO(pool);
+    var steamDAO = new app.app.model.JogadorDAO(pool);
     var battlerite = app.config.battlerite;
     var btsids = [];
 
-    console.log(req.session.verificarSessao);
-
-    steam.findAll(function(err,result){
+    steamDAO.findAll(function(err,result){
       if(err){
         console.log(err.stack);
       }

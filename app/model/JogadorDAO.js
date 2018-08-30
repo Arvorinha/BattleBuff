@@ -18,13 +18,13 @@ JogadorDAO.prototype.findBySteam64 = function(id,callback){
   });
 }
 
-JogadorDAO.prototype.insert = function(STEAM64, BTRID, NM_JOGADOR, callback){
+JogadorDAO.prototype.insert = function(STEAM64, BTRID, callback){
   this._pool().connect((err, client, done) => {
     if(err){
       throw err;
     }
-    let command = 'INSERT INTO TB_JOGADOR(STEAM64, BTRID, NM_JOGADOR) VALUES($1, $2, $3)';
-    let values = [STEAM64, BTRID, NM_JOGADOR];
+    let command = 'INSERT INTO TB_JOGADOR(STEAM64, BTRID) VALUES($1, $2)';
+    let values = [STEAM64, BTRID];
     client.query(command,values, callback);
   })
 }
