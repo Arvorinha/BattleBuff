@@ -1,4 +1,8 @@
 module.exports = function(app){
+  app.get('/agua', function(req,res){
+    console.log('a');
+    res.render('main');
+  });
   app.get('/', function(req,res){
     var pool = app.config.dbConnection;
     var steamDAO = new app.app.model.JogadorDAO(pool);
