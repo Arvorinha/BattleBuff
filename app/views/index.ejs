@@ -1,38 +1,37 @@
-<!DOCTYPE html>
-<html lang="pt-br" dir="ltr">
-<head>
-  <meta charset="utf-8">
-  <title>Battlebuff</title>
-  <link rel="stylesheet" href="/stylesheet/app.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-</head>
+<!doctype HTML>
+<html lang="pt">
+<% include includes/header.ejs %>
 <body>
-  <div class="container">
-    <div class="centro">
-      <a href="./auth"><img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Steam Login"></a>
-      <%if(sessao){%>
-        <a href="/sessao">Verificar Sessao</a>
-      <%}%>
-</div>
-      <div class="centro">
-      <table class="table">
-        <thead>
-          <tr>
-              <th colspan="2" class="cool"><center>Profiles</center></td>
-                </tr>
-              </thead>
-              <tbody>
-                <% if(typeof response != "undefined"){ %>
-                <% response.forEach(function(data) { %>
-                <tr>
-                  <td><img width="50px" height="50px" src="<%= ('https://battlerite.club/_Assets/images/avatar/' + data.attributes.stats.picture + '.png') %>"></td>
-                  <td><%= data.attributes.name %></td>
-                </tr>
-                <% })} %>
-              </tbody>
-            </table>
+  <div class="container min-100">
+    <div class="row">
+      <% include includes/side-bar.ejs %>
+      <div class="col-md-9">
+        <div class="jumbotron">
+          <img class="logo-header" src="/imgs/battlebuff-logo.png">
+          <form class="form-inline">
+            <div class="active-key">
+              <input type="password" class="form-control" placeholder="Insira uma chave de ativação">
+              <button type="submit" class="btn btn-danger">Enviar</button>
+            </div>
+          </form>
+        </div>
+        <center><h3>In-House</h3></center>
+        <!--BATTLERITE-->
+        <div class="game">
+          <div class="head">
+            <img src="/imgs/battlerite-logo.png">
+          </div>
+          <div class="body">
+            <span class="title">Battlerite</span>
+            <span class="salas text-info">5 salas abertas</span>
+            <form>
+              <button type="submit" class="btn btn-success">Entrar</button>
+            </form>
           </div>
         </div>
-      </body>
-      </html>
+      </div>
+    </div>
+</div>
+<% include includes/footer.ejs %>
+</body>
+</html>

@@ -34,11 +34,13 @@ module.exports = function(app){
           battlerite().getPlayerBySteamId(steamID).then((response) => {
             var btrID = response.data[0].id;
             nick = response.data[0].attributes.name;
+            img = response.data[0].attributes.stats.picture;
             steamDAO.insert(steamID, btrID, function(err, result){
               if (err) {
                 console.log(err);
               }
               req.session.nick = nick;
+              req.session.img = img;
               sessoes();
             })
           }).catch((error) => {
@@ -47,6 +49,7 @@ module.exports = function(app){
         }else {
           battlerite().getPlayerBySteamId(steamID).then((response) => {
             req.session.nick = response.data[0].attributes.name;
+            req.session.img = response.data[0].attributes.stats.picture;
             sessoes();
           }).catch((error) => {
               console.log(error.response.status);

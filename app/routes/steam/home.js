@@ -1,39 +1,20 @@
 module.exports = function(app){
-  app.get('/agua', function(req,res){
-    console.log('a');
-    res.render('main');
-  });
   app.get('/', function(req,res){
-    var pool = app.config.dbConnection;
-    var steamDAO = new app.app.model.JogadorDAO(pool);
-    var battlerite = app.config.battlerite;
-    var btsids = [];
-
-    steamDAO.findAll(function(err,result){
-      if(err){
-        console.log(err.stack);
+    if(req.session.verificarSessao){
+      if (typeof req.query.sair != "undefined" && req.query.sair == "sim") {
+        console.log(req.query.sair);
+        delete req.session.steamid;
+        delete req.session.verificarSessao;
+        delete req.session.nick;
+        delete req.session.btrid;
+        delete req.session.img;
+        res.redirect('/')
       }
-      else{
-        if (result.rowCount != 0) {
-
-          for(var i=0; i < result.rowCount ; i++){
-            btsids.push(result.rows[i].btrid);
-          }
-
-          battlerite().getPlayersByIds(btsids).then((response) => {
-              var results = response.data;
-              if(req.session.verificarSessao != 'undefined')
-                res.render('index', { response: results, sessao : req.session.verificarSessao});
-              else
-                res.render('index', { response: results, sessao : false});
-          }).catch((error) => {
-              console.log(error.response.status);
-          });
-
-        } else {
-          res.render('index', { sessao : false});
-        }
+      else {
+        res.render('index', {sessao : req.session.verificarSessao, nick : req.session.nick , steamid : req.session.steamid, btrid : req.session.btrid, img : req.session.img});
       }
-    })
+    }else {
+      res.render('index');
+    }
   });
 }
