@@ -23,6 +23,7 @@ consign()
   .include('app/routes')
   .then('config/dbConnection.js')
   .then('app/model')
+  .then('app/controller')
   .then('config/battlerite.js')
   .into(app);
 
