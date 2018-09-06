@@ -3,9 +3,15 @@ var app = express();
 var steam = require('steam-login');
 var consign = require('consign');
 var expressSession = require('express-session');
+var bodyParser = require('body-parser')
 
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 
 app.use(expressSession({
    resave: false,

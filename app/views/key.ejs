@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form class="" method="post" action="postKey">
+      <select class="" name="quantidade">
+        <option value="0">---Select---</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+      <button type="submit" name="btnGerarKey">GerarKey</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i=0;i < resultado.length; i++) {%>
+          <tr>
+            <td><%= resultado[i] %></td>
+          </tr>
+        <%}%>
+      </tbody>
+    </table>
+  </body>
+</html>
