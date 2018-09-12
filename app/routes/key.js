@@ -6,4 +6,8 @@ module.exports = function(app){
 	app.post('/postKey', function(req,res){
 		app.app.controller.key.postKey(app, req, res);
 	})
+
+	app.get('/validarKey',function(req,res){
+		app.app.controller.key.validarKey(app,req,res);
+	})
 }
