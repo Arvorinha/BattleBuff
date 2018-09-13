@@ -8,12 +8,24 @@
       <div class="col-md-9">
         <div class="jumbotron">
           <img class="logo-header" src="/imgs/battlebuff-logo.png">
-          <form class="form-inline">
-            <div class="active-key">
-              <input type="password" class="form-control" placeholder="Insira uma chave de ativação">
-              <button type="submit" class="btn btn-danger">Enviar</button>
+          <% if(erros) {%>
+            <div class="alert alert-danger">
+              <strong>Atenção!</strong>
+              <ul>
+                <% for(i=0;i < erros.length;i++) {%>
+                  <li><%= erros[i].msg %></li>
+                <%}%>
+              </ul>
             </div>
-          </form>
+          <%}%>
+          <% if(!autenticado) {%>
+            <form class="form-inline" action="registerKey" method="post">
+              <div class="active-key">
+                <input type="password" class="form-control" placeholder="Insira uma chave de ativação" name="key">
+                <button type="submit" class="btn btn-danger">Enviar</button>
+              </div>
+            </form>
+          <%}%>
         </div>
         <center><h3>In-House</h3></center>
         <!--BATTLERITE-->

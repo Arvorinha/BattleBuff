@@ -2,12 +2,18 @@ module.exports.key = function(app, req ,res){
 
   var pool = app.config.dbConnection;
   var keyDAO = new app.app.model.keyDAO(pool);
-
-  keyDAO.findAll(function(err,result){
+  keyDAO.findByUserNull(function(err,resultFindByUserNull){
     if (err) {
       throw err;
     }
-    res.render('key', {resultado: result});
+    var findByUserNull = resultFindByUserNull;
+    keyDAO.findByUserNotNull(function(err, resultFindByUserNotNull){
+      if (err) {
+        throw err;
+      }
+      var findByUserNotNull = resultFindByUserNotNull;
+      res.render('key', {findByUserNull: findByUserNull,findByUserNotNull:findByUserNotNull});
+    })
   })
 }
 

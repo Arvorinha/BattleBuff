@@ -1,6 +1,7 @@
 module.exports.verify = function(app, req ,res){
   var pool = app.config.dbConnection;
   var steamDAO = new app.app.model.JogadorDAO(pool);
+  var keyDAO = new app.app.model.keyDAO(pool);
   var battlerite = app.config.battlerite;
   var steamID = req.user.steamid;
 
@@ -10,10 +11,20 @@ module.exports.verify = function(app, req ,res){
         throw err;
       }
       req.session.sessaoAutorizada = true;
+      req.session.id_jogador = result.rows[0].id_jogador;
       req.session.steamid = result.rows[0].steam64;
       req.session.btrid = result.rows[0].btrid;
       req.session.verificarSessao = true;
-      res.redirect('/');
+      keyDAO.findByIdJogador(req.session.id_jogador,function(err,result){
+        if (err) {
+          throw err;
+        }
+        console.log(result);
+        if (result.rows[0].id_jogador == req.session.id_jogador) {
+          req.session.autenticado = true;
+        }
+        res.redirect('/');
+      })
     });
   }
 

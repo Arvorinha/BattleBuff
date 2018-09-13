@@ -17,22 +17,39 @@
       </select>
       <button type="submit" name="btnGerarKey">GerarKey</button>
     </form>
-    <% if(resultado.rowCount) {%>
+    <% if(findByUserNull.rowCount) {%>
       <p></p>
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Key</th>
+          <th scope="col">Keys disponíveis</th>
         </tr>
       </thead>
       <tbody>
-        <% for(var i=0;i < resultado.rowCount; i++) {%>
+        <% for(var i=0;i < findByUserNull.rowCount; i++) {%>
           <tr>
-            <td><%= resultado.rows[i].key %></td>
+            <td><%= findByUserNull.rows[i].key %></td>
           </tr>
         <%}%>
       </tbody>
     </table>
+    <%}%>
+    <% if(findByUserNotNull.rowCount) {%>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="cool">Keys Usadas</th>
+            <th class="cool">Nome do jogador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < findByUserNotNull.rowCount;i++) {%>
+            <tr>
+              <td><%= findByUserNotNull.rows[i].key %></td>
+            </tr>
+          <%}%>
+        </tbody>
+      </table>
     <%}%>
   </body>
 </html>
