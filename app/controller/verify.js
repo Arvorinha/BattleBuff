@@ -20,8 +20,10 @@ module.exports.verify = function(app, req ,res){
           throw err;
         }
         console.log(result);
-        if (result.rows[0].id_jogador == req.session.id_jogador) {
-          req.session.autenticado = true;
+        if (result.rowCount) {
+          if (result.rows[0].id_jogador == req.session.id_jogador) {
+            req.session.autenticado = true;
+          }
         }
         res.redirect('/');
       })
