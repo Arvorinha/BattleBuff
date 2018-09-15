@@ -1,0 +1,111 @@
+<!doctype HTML>
+<html lang="pt">
+<head>
+<% include includes/header.ejs %>
+<title>BattleBuff - Salas</title>
+</head>
+<body>
+  <div class="container min-100">
+    <div class="row">
+      <% include includes/side-bar.ejs %>
+      <div class="col-md-9">
+        <p></p>
+        <h3>Salas Abertas</h3>
+        <table class="table">
+          <thead>
+            <tr class="table-light">
+              <th scope="col">Nome</th>
+              <th scope="col">Espaços</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><input class="btn btn-primary form-control" type="button" value="Atualizar" onClick='parent.location="javascript:location.reload()"'></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Sala Tetis</th>
+              <td class="text-success">1/6</td>
+              <td class="text-success">Espera</td>
+              <td><a href="/sala" class="btn btn-outline-success form-control">Entrar</a></td>
+            </tr>
+            <tr>
+              <th scope="row">Sala Tetis</th>
+              <td class="text-warning">6/6</td>
+              <td class="text-warning">Andamento</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>Salas Finalizadas</h3>
+        <table class="table">
+          <thead>
+            <tr class="table-light">
+              <form>
+              <th scope="col">Buscar partidas</th>
+              <th colspan="2" scope="col"><input class="form-control" type="text"></th>
+              <th scope="col"><input class="btn btn-primary form-control" type="submit"></th>
+              </form>
+            </tr>
+            <tr class="table-light">
+              <th scope="col">Código</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Dono da Sala</th>
+              <th scope="col">Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">2958327895357</th>
+              <td>Sala do Tetis</td>
+              <td>Techzz</td>
+              <td>10/11/2018</td>
+            </tr>
+            <tr>
+              <th scope="row">2958327395357</th>
+              <td>Sala do Jonais</td>
+              <td>Jonais</td>
+              <td>10/11/2018</td>
+            </tr>
+            <tr>
+              <th scope="row">2958327395357</th>
+              <td>Sala do Jonais</td>
+              <td>Jonais</td>
+              <td>10/11/2018</td>
+            </tr>
+            <tr>
+              <th scope="row">2958327395357</th>
+              <td>Sala do Jonais</td>
+              <td>Jonais</td>
+              <td>10/11/2018</td>
+            </tr>
+            <tr>
+              <th scope="row">2958327395357</th>
+              <td>Sala do Jonais</td>
+              <td>Jonais</td>
+              <td>10/11/2018</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="pagination example">
+          <ul class="pagination justify-content-end">
+              <!--Previous button-->
+              <li class="page-item disabled">
+                  <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
+              </li>
+
+              <!--Numbers-->
+              <li class="page-item"><a class="page-link bg-light" href="#">1</a></li>
+              <li class="page-item"><a class="page-link bg-light" href="#">2</a></li>
+              <li class="page-item"><a class="page-link bg-light" href="#">3</a></li>
+
+              <!--Next button-->
+              <li class="page-item">
+                  <a class="page-link bg-light" href="#">Next</a>
+              </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+</div>
+<% include includes/footer.ejs %>
+</body>
+</html>
