@@ -5,9 +5,6 @@ var consign = require('consign');
 var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var request = require('request');
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
 
 app.set('view engine', 'ejs');
 app.set('views', './app/views');

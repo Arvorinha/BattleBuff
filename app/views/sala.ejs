@@ -14,6 +14,13 @@
         <table class="table">
           <thead>
             <tr class="table-light">
+              <form action="/criar-sala" method="post">
+              <th scope="col">Criar sala</th>
+              <th colspan="2" scope="col"><input class="form-control" name="txtNome" type="text"></th>
+              <th scope="col"><input value="Criar" class="btn btn-primary form-control" type="submit"></th>
+              </form>
+            </tr>
+            <tr class="table-light">
               <th scope="col">Nome</th>
               <th scope="col">Espaços</th>
               <th scope="col">Estado</th>
@@ -21,18 +28,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">Sala Tetis</th>
-              <td class="text-success">1/6</td>
-              <td class="text-success">Espera</td>
-              <td><a href="/sala" class="btn btn-outline-success form-control">Entrar</a></td>
-            </tr>
-            <tr>
-              <th scope="row">Sala Tetis</th>
-              <td class="text-warning">6/6</td>
-              <td class="text-warning">Andamento</td>
-              <td></td>
-            </tr>
+            <% for (var i = 0; i < results.length; i++) { %>
+              <tr>
+                <th scope="row"><%= results[i].nome %></th>
+                <td class="text-success"><%= results[i].jogadores %>/6</td>
+                <td class="text-success"><%= results[i].estado %></td>
+                <td><a href="/sala/<%= results[i].id %>" class="btn btn-outline-success form-control">Entrar</a></td>
+              </tr>
+            <% } %>
           </tbody>
         </table>
         <h3>Salas Finalizadas</h3>

@@ -21,7 +21,7 @@
               </ul>
             </div>
           <%}%>
-          <% if(!autenticado) {%>
+          <% if(!autenticado && locals.sessao) {%>
             <form class="form-inline" action="registerKey" method="post">
               <div class="active-key">
                 <input type="password" class="form-control" placeholder="Insira uma chave de ativação" name="key">
