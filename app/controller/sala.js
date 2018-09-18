@@ -17,7 +17,6 @@ function verificarPermicao (req, done) {
     return done (Error ('NAO-LOGADO'));
 }
 
-
 module.exports.sala = function(app,req,res){
   verificarPermicao (req, function (err) {
     if (err)
@@ -49,13 +48,27 @@ module.exports.entrarSala = function(app,req,res){
     if (err)
       res.redirect('/');
     else {
-      res.render('checksala', {
-        sala : req.params.sala,
-        sessao : req.session.verificarSessao,
-        nick : req.session.nick,
-        steamid : req.session.steamid,
-        btrid : req.session.btrid,
-        img : req.session.img
+      var pool = app.config.dbConnection;
+      var salaDAO = new app.app.model.salaDAO(pool);
+      salaDAO.findById(req.params.sala, function(err,result){
+        if(err){
+          console.log(err);
+          return
+        }
+        else {
+          if(result.rows.length >= 1){
+            res.render('checksala', {
+              sala : req.params.sala,
+              sessao : req.session.verificarSessao,
+              nick : req.session.nick,
+              steamid : req.session.steamid,
+              btrid : req.session.btrid,
+              img : req.session.img
+            });
+          }else {
+            res.redirect('/sala');
+          }
+        }
       });
     }
   });
@@ -81,6 +94,7 @@ module.exports.checarSala = function(app,req,res){
 
         if(body.success !== undefined && !body.success) {
           res.render('checksala', {
+            erros : "",
             sala : req.params.sala,
             sessao : req.session.verificarSessao,
             nick : req.session.nick,
@@ -111,5 +125,5 @@ module.exports.criarSala = function(app,req,res){
       var salaID = result.rows[0].id;
       res.redirect('/sala/' + salaID);
     }
-  })
+  });
 }
