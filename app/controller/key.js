@@ -1,20 +1,9 @@
 module.exports.key = function(app, req ,res){
-
-  var pool = app.config.dbConnection;
-  var keyDAO = new app.app.model.keyDAO(pool);
-  keyDAO.findByUserNull(function(err,resultFindByUserNull){
-    if (err) {
-      throw err;
-    }
-    var findByUserNull = resultFindByUserNull;
-    keyDAO.findByUserNotNull(function(err, resultFindByUserNotNull){
-      if (err) {
-        throw err;
-      }
-      var findByUserNotNull = resultFindByUserNotNull;
-      res.render('key', {findByUserNull: findByUserNull,findByUserNotNull:findByUserNotNull});
-    })
-  })
+  if(req.session.verificarSessao){
+    res.render('key', {erros:"", autenticado:req.session.autenticado, sessao : req.session.verificarSessao, nick : req.session.nick , steamid : req.session.steamid, btrid : req.session.btrid, img : req.session.img});
+  }else {
+    res.render('key',{erros:"",autenticado:false});
+  }
 }
 
 module.exports.postKey = function(app,req,res){

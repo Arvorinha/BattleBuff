@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  </head>
+  <body>
+    <form class="" method="post" action="postKey">
+      <select class="" name="quantidade">
+        <option value="0">---Select---</option>
+        <option value="1">1</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+      <button type="submit" name="btnGerarKey">GerarKey</button>
+    </form>
+    <% if(findByUserNull.rowCount) {%>
+      <p></p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Keys disponíveis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=1;i < findByUserNull.rowCount; i++) {%>
+          <tr>
+            <td><%= findByUserNull.rows[i].key %></td>
+          </tr>
+        <%}%>
+      </tbody>
+    </table>
+    <%}%>
+    <% if(findByUserNotNull.rowCount) {%>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="cool">Keys Usadas</th>
+            <th class="cool">Nome do jogador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < findByUserNotNull.rowCount;i++) {%>
+            <tr>
+              <td><%= findByUserNotNull.rows[i].key %></td>
+            </tr>
+          <%}%>
+        </tbody>
+      </table>
+    <%}%>
+  </body>
+</html>

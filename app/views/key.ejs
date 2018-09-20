@@ -2,54 +2,67 @@
 <html lang="pt-br" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>KEY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="../stylesheet/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <form class="" method="post" action="postKey">
-      <select class="" name="quantidade">
-        <option value="0">---Select---</option>
-        <option value="1">1</option>
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-      </select>
-      <button type="submit" name="btnGerarKey">GerarKey</button>
-    </form>
-    <% if(findByUserNull.rowCount) {%>
-      <p></p>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Keys disponíveis</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for(var i=0;i < findByUserNull.rowCount; i++) {%>
-          <tr>
-            <td><%= findByUserNull.rows[i].key %></td>
-          </tr>
-        <%}%>
-      </tbody>
-    </table>
-    <%}%>
-    <% if(findByUserNotNull.rowCount) {%>
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="cool">Keys Usadas</th>
-            <th class="cool">Nome do jogador</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for(var i = 0; i < findByUserNotNull.rowCount;i++) {%>
-            <tr>
-              <td><%= findByUserNotNull.rows[i].key %></td>
+    <div class="container min-100">
+      <div class="row">
+        <% include includes/side-bar %>
+
+        <div class="col-md-9">
+          <form class="" method="post" action="postKey">
+           <select class="form-control" name="quantidade" style="float:left;width:15%">
+             <option value="0">---Select---</option>
+             <option value="1">1</option>
+             <option value="5">5</option>
+             <option value="10">10</option>
+             <option value="15">15</option>
+             <option value="20">20</option>
+           </select>
+           <button type="submit" name="btnGerarKey" class="btn btn" style="margin-left:2%;margin-top:0.1%;">GerarKey</button>
+         </form>
+           <p></p>
+           <table class="table">
+          <thead>
+            <tr class="table-light">
             </tr>
-          <%}%>
-        </tbody>
-      </table>
-    <%}%>
+            <tr class="table-light">
+              <th scope="col">Key</th>
+              <th scope="col">Dono</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">2958327895357</th>
+              <td>Nalfu</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="pagination example">
+          <ul class="pagination justify-content-end">
+              <!--Previous button-->
+              <li class="page-item disabled">
+                  <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
+              </li>
+
+              <!--Numbers-->
+              <li class="page-item"><a class="page-link bg-light" href="#">1</a></li>
+              <li class="page-item"><a class="page-link bg-light" href="#">2</a></li>
+              <li class="page-item"><a class="page-link bg-light" href="#">3</a></li>
+
+              <!--Next button-->
+              <li class="page-item">
+                  <a class="page-link bg-light" href="#">Next</a>
+              </li>
+          </ul>
+      </nav>
+      </div>
+    </div>
   </body>
 </html>
