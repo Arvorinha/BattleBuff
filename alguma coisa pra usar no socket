@@ -1,0 +1,42 @@
+var picks = {} // empty Object
+var key = 'jogador';
+picks[key] = []; // empty Array, which you can push() values into
+
+
+var data = {
+  id: '1',
+  nome: 'BalacoBakko',
+  rank: '6',
+  idimg: '8898' 
+};
+
+var data2 = {
+  id: '2',
+  nome: 'Nalfu',
+  rank: '7',
+  idimg: '8398' 
+};
+
+var data3 = {
+  id: '3',
+  nome: 'Boccato',
+  rank: '1',
+  idimg: '8498' 
+};
+
+picks[key].push(data);
+picks[key].push(data2);
+picks[key].push(data3);
+
+function deletarJogador(id, data){
+  for (var i=0; i < data.length; i++) {
+        if (data[i].id === id) {
+            data.splice(i, 1);;
+        }
+    }
+}
+
+deletarJogador('1', picks['jogador'])
+
+//console.log(picks['Jogador'][0].id);
+console.log(picks['jogador']);
