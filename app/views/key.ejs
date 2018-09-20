@@ -3,12 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>KEY</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-    <link rel="stylesheet" href="../stylesheet/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <% include includes/header.ejs %>
   </head>
   <body>
     <div class="container min-100">
@@ -38,10 +33,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">2958327895357</th>
-              <td>Nalfu</td>
-            </tr>
+            <% for(var i=0; i < findByUserNotNull.rowCount;i++) {%>
+              <tr>
+                <th scope="row"><%=findByUserNotNull[i].key%></th>
+                <th><%=findByUserNotNull[i].nick%></th>
+              </tr>
+            <%}%>
+            <% for(var i=0; i < findByUserNull.rowCount;i++) {%>
+              <tr>
+                <th scope="row"><%=findByUserNull.rows[i].key%></th>
+              </tr>
+            <%}%>
           </tbody>
         </table>
         <nav aria-label="pagination example">

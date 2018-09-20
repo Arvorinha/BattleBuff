@@ -3,7 +3,7 @@ html, body {
 }
 
 .min-100 {
-    min-height: 100%;
+  min-height: 100%;
 }
 
 .logo-header{
@@ -28,6 +28,9 @@ html, body {
   vertical-align: middle !important;
 }
 
+.pagina{
+  padding-top: 30px;
+}
 
 .game{
   width: 100%;
@@ -70,6 +73,8 @@ html, body {
   margin-top: 15px;
 }
 
+
+/*profile card side bar*/
 
 .side-bar {
   padding-top: 30px;
@@ -116,4 +121,37 @@ html, body {
   color: #839496;
   line-height: 29px;
   font-size: 19px;
+}
+
+/*player tabela card*/
+
+.player-tabela-body {
+  padding: 6px;
+  padding-bottom: 12px;
+}
+
+.player {
+  margin-top: 12px;
+  height: 50px;
+}
+
+.player .avatar{
+  float: left;
+}
+
+.player .dados{
+  margin-left: 56px;
+}
+
+.player .avatar img {
+  width: 50px;
+  height: 50px;
+}
+
+
+.player-tabela .card-header {
+  font-size: 24px;
+  line-height: 20px;
+  text-align: center;
+  white-space: nowrap;
 }

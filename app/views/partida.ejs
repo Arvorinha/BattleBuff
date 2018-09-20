@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="/socket.io/socket.io.js"></script>
+  	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  	<script>
+    
+      var socket = io();
+
+      socket.on('room users', function(userlist){
+        document.getElementById("nPessoas").innerHTML = userlist;
+      });
+
+    </script>
+    <title>Salas</title>
+  </head>
+  <body onload="newuser();">
+    Pessoas na sala: <span id="nPessoas">0</span>
+  </body>
+</html>

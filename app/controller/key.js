@@ -1,9 +1,46 @@
-module.exports.key = function(app, req ,res){
-  if(req.session.verificarSessao){
-    res.render('key', {erros:"", autenticado:req.session.autenticado, sessao : req.session.verificarSessao, nick : req.session.nick , steamid : req.session.steamid, btrid : req.session.btrid, img : req.session.img});
-  }else {
-    res.render('key',{erros:"",autenticado:false});
-  }
+module.exports.key =function(app, req ,res){
+  var pool = app.config.dbConnection;
+  var keyDAO = new app.app.model.keyDAO(pool);
+  var battlerite = app.config.battlerite;
+  var finalJson = [];
+  keyDAO.findByUserNull(function(err,result){
+    if (err) {
+      throw err;
+    }
+    var findByUserNull = result;
+    keyDAO.findByUserNotNull(function(err,result){
+      if (err) {
+        throw err;
+      }
+      result.rows.forEach(function(data){
+        battlerite().getPlayerBySteamId(data.steam64).then((response) => {
+          finalJson.push({ key: data.key, steam64: data.steam64, nick:response.data[0].attributes.name})
+        }).catch((error) => {
+            console.log(error.response.status);
+        });
+      })
+      if(req.session.verificarSessao){
+                  res.render('key', {
+                    erros:"",
+                    autenticado:req.session.autenticado,
+                    sessao : req.session.verificarSessao,
+                    nick : req.session.nick ,
+                    steamid : req.session.steamid,
+                    btrid : req.session.btrid,
+                    img : req.session.img,
+                    findByUserNull: findByUserNull,
+                    findByUserNotNull: finalJson
+                  });
+      }else {
+        res.render('key',{
+          erros:"",
+          autenticado:false,
+          findByUserNull: findByUserNull,
+          findByUserNotNull: finalJson
+        });
+      }
+    })
+  })
 }
 
 module.exports.postKey = function(app,req,res){
