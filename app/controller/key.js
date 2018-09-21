@@ -1,44 +1,59 @@
 module.exports.key =function(app, req ,res){
+  if (!req.session.verificarSessao) {
+    return res.redirect('auth');
+  }
   var pool = app.config.dbConnection;
   var keyDAO = new app.app.model.keyDAO(pool);
   var battlerite = app.config.battlerite;
   var finalJson = [];
+  var keys = [];
   keyDAO.findByUserNull(function(err,result){
     if (err) {
-      throw err;
+      return console.log(err);
     }
     var findByUserNull = result;
     keyDAO.findByUserNotNull(function(err,result){
       if (err) {
-        throw err;
+        return console.log(err);
       }
       result.rows.forEach(function(data){
-        battlerite().getPlayerBySteamId(data.steam64).then((response) => {
-          finalJson.push({ key: data.key, steam64: data.steam64, nick:response.data[0].attributes.name})
+        keys.push(data.btrid)
+      })
+      var startPage =async function(){
+        var pagina = req.query.pagina;
+        if (!pagina) {
+          pagina = 0;
+        }
+        battlerite().getPlayersByIds(keys).then((response) => {
+            var maxItemsPerPage = 10;
+            var numPaginas = Math.ceil((findByUserNull.rowCount + result.rowCount) / maxItemsPerPage);
+            for (var i = 0; i < response.data.length; i++) {
+              finalJson.push({
+                key: result.rows[i].key,
+                btrid: result.rows[i].btrid,
+                nick: response.data[i].attributes.name
+              })
+            }
+            res.render('key', {
+              erros:"",
+              autenticado:req.session.autenticado,
+              sessao : req.session.verificarSessao,
+              nick : req.session.nick ,
+              steamid : req.session.steamid,
+              btrid : req.session.btrid,
+              img : req.session.img,
+              queryPaginacao: pagina,
+              maximoItem: maxItemsPerPage,
+              numPaginas: numPaginas,
+              findByUserNull: findByUserNull,
+              findByUserNotNull: finalJson
+            });
+
         }).catch((error) => {
             console.log(error.response.status);
         });
-      })
-      if(req.session.verificarSessao){
-                  res.render('key', {
-                    erros:"",
-                    autenticado:req.session.autenticado,
-                    sessao : req.session.verificarSessao,
-                    nick : req.session.nick ,
-                    steamid : req.session.steamid,
-                    btrid : req.session.btrid,
-                    img : req.session.img,
-                    findByUserNull: findByUserNull,
-                    findByUserNotNull: finalJson
-                  });
-      }else {
-        res.render('key',{
-          erros:"",
-          autenticado:false,
-          findByUserNull: findByUserNull,
-          findByUserNotNull: finalJson
-        });
       }
+      startPage();
     })
   })
 }

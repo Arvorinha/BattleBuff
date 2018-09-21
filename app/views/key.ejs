@@ -33,32 +33,49 @@
             </tr>
           </thead>
           <tbody>
-            <% for(var i=0; i < findByUserNotNull.rowCount;i++) {%>
+            <% if(queryPaginacao > 1) {%>
+              <% var i=10*(queryPaginacao-1); %>
+              <% maximoItem = maximoItem * queryPaginacao; %>
+              <% for(i; i < findByUserNotNull && i < maximoItem;i++){%>
+                <tr>
+                  <th scope="row"><%=findByUserNotNull[i].key%></th>
+                  <th><%=findByUserNotNull[i].nick%></th>
+                </tr>
+              <%}%>
+              <% maximoItem = maximoItem - findByUserNotNull.length; %>
+              <% i= i - findByUserNotNull.length %>
+              <% for(i; i < findByUserNull.rowCount && i < maximoItem;i++) {%>
+                <tr>
+                  <th scope="row"><%=findByUserNull.rows[i].key%></th>
+                  <th></th>
+                </tr>
+              <%}%>
+            <%}else{%>
+            <% var i=0; %>
+            <% for(i; i < findByUserNotNull.length && i < maximoItem;i++){%>
               <tr>
                 <th scope="row"><%=findByUserNotNull[i].key%></th>
                 <th><%=findByUserNotNull[i].nick%></th>
               </tr>
             <%}%>
-            <% for(var i=0; i < findByUserNull.rowCount;i++) {%>
+            <% maximoItem = maximoItem - findByUserNotNull.length; %>
+            <% i= i - findByUserNotNull.length %>
+            <% for(i; i < findByUserNull.rowCount && i < maximoItem;i++) {%>
               <tr>
                 <th scope="row"><%=findByUserNull.rows[i].key%></th>
+                <th></th>
               </tr>
-            <%}%>
+            <%}}%>
           </tbody>
         </table>
         <nav aria-label="pagination example">
           <ul class="pagination justify-content-end">
-              <!--Previous button-->
               <li class="page-item disabled">
                   <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
               </li>
-
-              <!--Numbers-->
-              <li class="page-item"><a class="page-link bg-light" href="#">1</a></li>
-              <li class="page-item"><a class="page-link bg-light" href="#">2</a></li>
-              <li class="page-item"><a class="page-link bg-light" href="#">3</a></li>
-
-              <!--Next button-->
+              <% for(var i=1;i <= numPaginas;i++) {%>
+                <li class="page-item"><a class="page-link bg-light" href="?pagina=<%= i %>"><%= i %></a></li>
+              <%}%>
               <li class="page-item">
                   <a class="page-link bg-light" href="#">Next</a>
               </li>
