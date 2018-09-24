@@ -17,6 +17,76 @@ function verificarPermicao (req, done) {
     return done (Error ('NAO-LOGADO'));
 }
 
+var io;
+module.exports.salaID = function(importIO, app) {
+  var pool = app.config.dbConnection;
+  var salaDAO = new app.app.model.salaDAO(pool);
+  var io = importIO;
+
+  io.on('connection', function(socket){
+    console.log('jogador entrou');
+
+    //ao jogador entrar na partida enviar o id
+    socket.on('room', function(room) {
+      socket.room = room;
+      socket.join(room);
+      //checar número de jogadores dentro da partida
+      var clients = io.sockets.adapter.rooms[room].sockets;
+      var numClients = Object.keys(clients).length;
+      //atualizar a contagem de jogadores na partida
+      io.to(room).emit('room users', numClients);
+      //atualizar a contagem de jogadores no banco
+      salaDAO.updateJogadoresByIdSala(room, numClients,function(err,result){
+        if(err){
+          console.log(err);
+          return
+        }
+        else
+          console.log('sala atualizada ao um usuario entrar');
+      });
+    });
+
+    //atualizar a contagem de jogadores na partida
+    socket.on('room users', function(userlist) {
+      io.emit('room users', userlist);
+    });
+
+    //ao jogador desconectar da partida
+    socket.on('disconnect', function(){
+      room = socket.room;
+
+      //checar número de jogadores dentro da partida
+      if (io.sockets.adapter.rooms[room] === undefined){
+        numClients = 0;
+        //deletar sala no banco se n tiver jogadores
+        salaDAO.deleteSalaById(room,function(err,result){
+          if(err){
+            console.log(err);
+            return
+          }
+          else
+            console.log('sala deletada ao um usuario sair');
+        });
+      }else {
+        clients = io.sockets.adapter.rooms[room].sockets;
+        numClients = Object.keys(clients).length;
+        //atualizar a contagem de jogadores no banco
+        salaDAO.updateJogadoresByIdSala(room, numClients,function(err,result){
+          if(err){
+            console.log(err);
+            return
+          }else
+            console.log('sala atualizada ao um usuario sair');
+        });
+      }
+      //atualizar a contagem de jogadores na partida
+      io.to(room).emit('room users', numClients);
+
+      console.log('jogador saiu');
+    });
+  });
+}
+
 module.exports.sala = function(app,req,res){
   verificarPermicao (req, function (err) {
     if (err)
@@ -109,7 +179,6 @@ module.exports.checarSala = function(app,req,res){
     }
   });
 }
-
 
 module.exports.criarSala = function(app,req,res){
   var nome = req.param('txtNome');

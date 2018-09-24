@@ -5,8 +5,15 @@
     <script src="/socket.io/socket.io.js"></script>
   	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   	<script>
-    
-      var socket = io();
+
+      var socket = io.connect();
+
+      var url = window.location.href;
+      var salaID = url.split("/")[4];
+
+      socket.on('connect', function() {
+         socket.emit('room', salaID);
+      });
 
       socket.on('room users', function(userlist){
         document.getElementById("nPessoas").innerHTML = userlist;

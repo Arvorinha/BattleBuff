@@ -11,7 +11,6 @@ module.exports.index = function(app, req ,res){
       res.redirect('/')
     }
     else {
-      console.log(req.session.autenticado);
       res.render('index', {erros:"", autenticado:req.session.autenticado, sessao : req.session.verificarSessao, nick : req.session.nick , steamid : req.session.steamid, btrid : req.session.btrid, img : req.session.img});
     }
   }else {
