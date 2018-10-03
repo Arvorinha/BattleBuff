@@ -1,7 +1,7 @@
 module.exports.key =function(app, req ,res){
-  if (!req.session.verificarSessao) {
-    return res.redirect('auth');
-  }
+  // if (!req.session.verificarSessao) {
+  //   return res.redirect('auth');
+  // }
   var pool = app.config.dbConnection;
   var keyDAO = new app.app.model.keyDAO(pool);
   var battlerite = app.config.battlerite;
@@ -24,16 +24,18 @@ module.exports.key =function(app, req ,res){
         if (!pagina) {
           pagina = 0;
         }
-        battlerite().getPlayersByIds(keys).then((response) => {
-            var maxItemsPerPage = 10;
-            var numPaginas = Math.ceil((findByUserNull.rowCount + result.rowCount) / maxItemsPerPage);
+        var maxItemsPerPage = 10;
+        var numPaginas = Math.ceil((findByUserNull.rowCount + result.rowCount) / maxItemsPerPage);
+        if (result.rowCount > 0) {
+          battlerite().getPlayersByIds(keys).then((response) => {
             for (var i = 0; i < response.data.length; i++) {
               finalJson.push({
-                key: result.rows[i].key,
+                tx_key: result.rows[i].tx_key,
                 btrid: result.rows[i].btrid,
                 nick: response.data[i].attributes.name
               })
             }
+            console.log(finalJson);
             res.render('key', {
               erros:"",
               autenticado:req.session.autenticado,
@@ -49,8 +51,24 @@ module.exports.key =function(app, req ,res){
               findByUserNotNull: finalJson
             });
 
-        }).catch((error) => {
+          }).catch((error) => {
             console.log(error.response.status);
+          });
+          return;
+        }
+        res.render('key', {
+          erros:"",
+          autenticado:req.session.autenticado,
+          sessao : req.session.verificarSessao,
+          nick : req.session.nick ,
+          steamid : req.session.steamid,
+          btrid : req.session.btrid,
+          img : req.session.img,
+          queryPaginacao: pagina,
+          maximoItem: maxItemsPerPage,
+          numPaginas: numPaginas,
+          findByUserNull: findByUserNull,
+          findByUserNotNull: ''
         });
       }
       startPage();

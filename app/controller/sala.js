@@ -120,6 +120,7 @@ module.exports.entrarSala = function(app,req,res){
     else {
       var pool = app.config.dbConnection;
       var salaDAO = new app.app.model.salaDAO(pool);
+      console.log(req.params.sala);
       salaDAO.findById(req.params.sala, function(err,result){
         if(err){
           console.log(err);
