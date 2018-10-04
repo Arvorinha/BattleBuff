@@ -99,6 +99,7 @@ module.exports.sala = function(app,req,res){
         if (err)
           throw err;
         else {
+          console.log(result);
           res.render('sala', {
             results: result.rows,
             sala : req.params.sala,

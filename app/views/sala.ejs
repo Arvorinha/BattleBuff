@@ -30,10 +30,10 @@
           <tbody>
             <% for (var i = 0; i < results.length; i++) { %>
               <tr>
-                <th scope="row"><%= results[i].nome %></th>
-                <td class="text-success"><%= results[i].jogadores %>/6</td>
-                <td class="text-success"><%= results[i].estado %></td>
-                <td><a href="/sala/<%= results[i].id %>" class="btn btn-outline-success form-control">Entrar</a></td>
+                <th scope="row"><%= results[i].nm_sala %></th>
+                <td class="text-success"><%= results[i].qtd_jogadores %>/6</td>
+                <td class="text-success"><%= results[i].nm_status %></td>
+                <td><a href="/sala/<%= results[i].id_sala %>" class="btn btn-outline-success form-control">Entrar</a></td>
               </tr>
             <% } %>
           </tbody>
