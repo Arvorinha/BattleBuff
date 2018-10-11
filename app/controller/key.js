@@ -1,12 +1,23 @@
 module.exports.key =function(app, req ,res){
-  // if (!req.session.verificarSessao) {
-  //   return res.redirect('auth');
-  // }
+  if (!req.session.verificarSessao) {
+    return res.redirect('auth');
+  }
   var pool = app.config.dbConnection;
   var keyDAO = new app.app.model.keyDAO(pool);
+  var AdminDAO = new app.app.model.AdminDAO(pool);
   var battlerite = app.config.battlerite;
   var finalJson = [];
   var keys = [];
+
+  AdminDAO.findById(req.session.id_jogador,function(err,result){
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    if (!result.rowCount > 0) {
+      res.redirect('/');
+    }
+  })
   keyDAO.findByUserNull(function(err,result){
     if (err) {
       return console.log(err);
