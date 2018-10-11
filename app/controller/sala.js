@@ -176,7 +176,11 @@ module.exports.checarSala = function(app,req,res){
           });
           return;
         }
-        res.render('partida');
+        res.render('partida', {
+          nick : req.session.nick,
+          btrid : req.session.btrid,
+          img : req.session.img
+        });
       });
     }
   });

@@ -19,10 +19,14 @@
         document.getElementById("nPessoas").innerHTML = userlist;
       });
 
+      function credencial(btrid, nick, img){
+        socket.emit('new user', btrid, nick, img);
+      }
+
     </script>
     <title>Salas</title>
   </head>
-  <body onload="newuser();">
+  <body onload="credencial(<%= btrid%>,<%= nick%>,<%= imgs%>);">
     Pessoas na sala: <span id="nPessoas">0</span>
   </body>
 </html>
