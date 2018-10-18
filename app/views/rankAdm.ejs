@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<% if(erros){%>
+		<ul>
+			<%for(var i=0; i < erros.length; i++){%>
+				<li><%= erros[i].msg %></li>
+			<%}%>
+		</ul>
+	<%}%>
+	<form action="/alterarRanking" method="POST">
+		<label for="nomeSeason">Nome Season</label>
+		<input type="text" name="season" id="nomeSeason">
+		<input type="submit" value="Alterar Rankign">
+	</form>
+	<br>
+	<h1><%= session.nick%></h1>
+</body>
+</html>

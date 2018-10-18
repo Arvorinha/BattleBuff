@@ -1,3 +1,9 @@
 module.exports.auth = function(app, req ,res){
-  res.redirect('/');
+	if (!req.session) {
+		return res.render('/');
+	}
+	Console.log(req.session);
+	res.render('rankAdm', {
+  		session:req.session
+  	})
 }
