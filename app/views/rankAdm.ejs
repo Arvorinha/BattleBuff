@@ -4,17 +4,24 @@
 	<title></title>
 </head>
 <body>
-	<% if(erros){%>
+	<% if(erros.length > 0){%>
 		<ul>
-			<%for(var i=0; i < erros.length; i++){%>
-				<li><%= erros[i].msg %></li>
+			<%for(var i=0; i < erros.length-1; i++){%>
+				<li><%= erros[i].msg%></li>
+			<%}%>
+		</ul>
+	<%}%>
+	<% if(sucesso.length > 0) {%>
+		<ul>
+			<%for(var i=0; i < sucesso.length; i++){%>
+				<li><%= sucesso[i].msg %></li>
 			<%}%>
 		</ul>
 	<%}%>
 	<form action="/alterarRanking" method="POST">
 		<label for="nomeSeason">Nome Season</label>
-		<input type="text" name="season" id="nomeSeason">
-		<input type="submit" value="Alterar Rankign">
+		<input type="text" name="season" id="nomeSeason" value="<%= erros.length > 0 ? erros[i].form.season : ''%>">
+		<input type="submit" value="Incluir Season">
 	</form>
 	<br>
 	<h1><%= session.nick%></h1>
