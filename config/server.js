@@ -5,6 +5,7 @@ var consign = require('consign');
 var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
+var expressFileUploader = require('express-fileupload')
 
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
@@ -25,6 +26,9 @@ app.use(steam.middleware({
     verify: 'http://localhost:5000/verify',
     apiKey: '69FC736459FCC5094E6CE76DCD0A466D'}
 ));
+
+app.use(expressFileUploader());
+
 app.use(express.static('./app/views/public'));
 
 consign()

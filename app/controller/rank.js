@@ -20,7 +20,6 @@ module.exports.alterarRanking = function (app,req,res){
 	}
 	if(erros){
 		erros.push(dadosForm);
-		console.log(erros[2].form.season);
 		res.render('rankAdm',{
 			session:req.session,
 			erros:erros,
@@ -76,5 +75,4 @@ module.exports.alterarRanking = function (app,req,res){
 			}
 		})
 	})
-
 }
