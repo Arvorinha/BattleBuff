@@ -50,6 +50,8 @@ module.exports.salaID = function(importIO, app) {
     socket.on('room users', function(userlist) {
       io.emit('room users', userlist);
     });
+
+    //usuariocredencial
     socket.on('new user', function(btrid, img, nome, room) {
       socket.profile = {
         id: btrid,
