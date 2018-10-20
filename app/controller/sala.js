@@ -50,6 +50,16 @@ module.exports.salaID = function(importIO, app) {
     socket.on('room users', function(userlist) {
       io.emit('room users', userlist);
     });
+    socket.on('new user', function(btrid, img, nome, room) {
+      socket.profile = {
+        id: btrid,
+        nome: nome,
+        rank: 0,
+        idimg: img
+      };
+
+      console.log(io.sockets.adapter.rooms[room].sockets);
+    });
 
     //ao jogador desconectar da partida
     socket.on('disconnect', function(){
@@ -99,7 +109,6 @@ module.exports.sala = function(app,req,res){
         if (err)
           throw err;
         else {
-          console.log(result);
           res.render('sala', {
             results: result.rows,
             sala : req.params.sala,
@@ -113,6 +122,7 @@ module.exports.sala = function(app,req,res){
     }
   });
 }
+
 
 module.exports.entrarSala = function(app,req,res){
   verificarPermicao (req, function (err) {
@@ -138,7 +148,11 @@ module.exports.entrarSala = function(app,req,res){
               img : req.session.img
             });
           }else {
-            res.redirect('/sala');
+            res.render('partida', {
+              nick : req.session.nick,
+              btrid : req.session.btrid,
+              img : req.session.img
+            });
           }
         }
       });
@@ -191,13 +205,13 @@ module.exports.criarSala = function(app,req,res){
   var pool = app.config.dbConnection;
   var salaDAO = new app.app.model.salaDAO(pool);
 
-  salaDAO.insert(nome, 'Espera',function(err,result){
+  salaDAO.insert(nome, function(err,result){
     if(err){
       console.log(err);
       return
     }
     else {
-      var salaID = result.rows[0].id;
+      var salaID = result.rows[0].id_sala;
       res.redirect('/sala/' + salaID);
     }
   });

@@ -4,7 +4,7 @@ function salaDAO(pool){
 
 // criando sala:
 // apenas o nome porque o resto ja tem um default no banco
-// INSERT INTO TB_SALA(NOME) VALUES(NOME);
+// INSERT INTO TB_SALA(NM_SALA) VALUES(NOME);
 //
 // atualizando quantidade de jogadores
 // UPDATE TB_SALA(QTD_JOGADORES) VALUES(QTD_JOGADORES)
@@ -38,7 +38,7 @@ salaDAO.prototype.insert = function (nome, callback) {
     if (err) {
       throw err;
     }
-    client.query('INSERT INTO TB_SALA(NOME) VALUES($1) RETURNING id',[nome],callback);
+    client.query('INSERT INTO TB_SALA(NM_SALA) VALUES($1) RETURNING ID_SALA',[nome],callback);
   })
 }
 
@@ -47,7 +47,7 @@ salaDAO.prototype.updateJogadoresByIdSala = function (id, jogadores, callback) {
     if (err) {
       throw err;
     }
-    client.query('UPDATE TB_SALA SET JOGADORES = $1 WHERE ID = $2',[jogadores, id],callback);
+    client.query('UPDATE TB_SALA SET QTD_JOGADORES = $1 WHERE ID_SALA = $2',[jogadores, id],callback);
   })
 }
 
@@ -56,7 +56,7 @@ salaDAO.prototype.deleteSalaById = function (id, callback) {
     if (err) {
       throw err;
     }
-    client.query('DELETE FROM TB_SALA WHERE ID = $1',[id],callback);
+    client.query('DELETE FROM TB_SALA WHERE ID_SALA = $1',[id],callback);
   })
 }
 

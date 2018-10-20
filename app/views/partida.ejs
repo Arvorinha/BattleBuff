@@ -20,13 +20,13 @@
       });
 
       function credencial(btrid, nick, img){
-        socket.emit('new user', btrid, nick, img);
+        socket.emit('new user', btrid, nick, img, salaID);
       }
 
     </script>
     <title>Salas</title>
   </head>
-  <body onload="credencial(<%= btrid%>,<%= nick%>,<%= imgs%>);">
+  <body onload="credencial(<%= btrid%>,'<%= nick%>',<%= img%>);">
     Pessoas na sala: <span id="nPessoas">0</span>
   </body>
 </html>
