@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <%include includes/header%>
+    <title></title>
+  </head>
+  <body>
+    <div class="container" style="margin:0">
+      <div class="row">
+      <%include includes/side-bar%>
+        <div class="col-md-3">
+          <div class="col-md-3">
+            <a href="/admin/season">Season</a>
+          </div>
+          <div class="col-md-3">
+            <a href="/admin/organizacao">Organizacao</a>
+          </div>
+          <div class="col-md-3">
+            <a href="/admin/rank">Rank</a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <%if(erros){%>
+            <div class="alert alert-danger">
+              <strong>Atenção!!</strong>
+              <ul>
+                <%for(var i = 0; i < erros.length ; i++){%>
+                  <li><%= erros[i].msg %></li>
+                <%}%>
+                </ul>
+            </div>
+          <%}%>
+          <%if(sucesso){%>
+            <div class="alert alert-success">
+              <strong>Sucesso!!</strong>
+              <ul>
+                <%for(var i = 0; i < sucesso.length ; i++){%>
+                  <li><%= sucesso[i].msg %></li>
+                  <%}%>
+                </ul>
+            </div>
+          <%}%>
+          <%- pagina == 'season' ? include('includes/'+pagina) : '' %>
+          <%- pagina == 'organizacao' ? include('includes/'+pagina) : '' %>
+          <%- pagina == 'inexistente' ? '<h2>Página inexistente</h2>' : '' %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
