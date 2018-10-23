@@ -11,4 +11,23 @@
       </div>
     </div>
 </form>
-<br>
+<%if(result.rowCount > 0){%>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Data inicio</th>
+        <th>Data fim</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%for(var i=0; i < result.rowCount ; i++){%>
+        <tr>
+          <td><%= result.rows[i].nm_season%></td>
+          <td><%= result.rows[i].dt_inicio%></td>
+          <td><%= result.rows[i].dt_fim%></td>
+        </tr>
+      <%}%>
+    </tbody>
+  </table>
+<%}%>

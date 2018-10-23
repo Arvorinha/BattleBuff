@@ -8,12 +8,17 @@ module.exports.admin = function(app,req,res){
 }
 
 module.exports.pagina = function(app,req,res){
-  function render(pagina) {
+  var connection = app.config.dbConnection;
+  var sDAO = new app.app.model.SeasonDAO(connection);
+  var oDAO = new app.app.model.OrganizacaoDAO(connection)
+  async function render(pagina,result) {
+    console.log(result);
     res.render('admin',{
       erros:'',
       sucesso: '',
       pagina:pagina,
-      session: req.session
+      session: req.session,
+      result: result
     })
   }
 
@@ -22,13 +27,28 @@ module.exports.pagina = function(app,req,res){
       erros: [{msg:erro}],
       pagina: '',
       sucesso: '',
-      session:req.session
+      session:req.session,
+      result: ''
     })
   }
+
+  async function getAllSeason() {
+    sDAO.findAll(function(err,result) {
+      if (err) {
+        throw err;
+      }
+      render(req.params.pagina,result);
+    })
+  }
+
+  async function getAllOrganizacao() {
+
+  }
+
   switch (req.params.pagina) {
-    case 'season':render(req.params.pagina);
+    case 'season':getAllSeason();
       break;
-    case 'organizacao':render(req.params.pagina);
+    case 'organizacao':getAllOrganizacao();
       break;
     case 'a':render(req.params.pagina);
       break;
