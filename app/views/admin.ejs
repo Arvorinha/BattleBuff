@@ -1,50 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-br" dir="ltr">
-  <head>
-    <%include includes/header%>
-    <title></title>
-  </head>
-  <body>
-    <div class="container" style="margin:0">
-      <div class="row">
-      <%include includes/side-bar%>
-        <div class="col-md-3">
+
+<head>
+  <%include includes/header%>
+  <title></title>
+</head>
+
+<body>
+  <div class="page-wrapper chiller-theme toggled">
+    <%include includes/side-bar%>
+    <main class="page-content">
+      <div class="container-fluid min-100">
+        <div class="row">
           <div class="col-md-3">
-            <a href="/admin/season">Season</a>
+            <ul>
+              <li><a href="/admin/season">Season</a></li>
+              <li><a href="/admin/organizacao">Organizacao</a></li>
+              <li><a href="/admin/rank">Rank</a></li>
+            </ul>
           </div>
-          <div class="col-md-3">
-            <a href="/admin/organizacao">Organizacao</a>
-          </div>
-          <div class="col-md-3">
-            <a href="/admin/rank">Rank</a>
-          </div>
-        </div>
+
         <div class="col-md-6">
           <%if(erros){%>
-            <div class="alert alert-danger">
-              <strong>Atenção!!</strong>
-              <ul>
-                <%for(var i = 0; i < erros.length ; i++){%>
-                  <li><%= erros[i].msg %></li>
-                <%}%>
-                </ul>
-            </div>
+          <div class="alert alert-danger">
+            <strong>Atenção!!</strong>
+            <ul>
+              <%for(var i = 0; i < erros.length ; i++){%>
+              <li>
+                <%= erros[i].msg %>
+              </li>
+              <%}%>
+            </ul>
+          </div>
           <%}%>
           <%if(sucesso){%>
-            <div class="alert alert-success">
-              <strong>Sucesso!!</strong>
-              <ul>
-                <%for(var i = 0; i < sucesso.length ; i++){%>
-                  <li><%= sucesso[i].msg %></li>
-                  <%}%>
-                </ul>
-            </div>
+          <div class="alert alert-success">
+            <strong>Sucesso!!</strong>
+            <ul>
+              <%for(var i = 0; i < sucesso.length ; i++){%>
+              <li>
+                <%= sucesso[i].msg %>
+              </li>
+              <%}%>
+            </ul>
+          </div>
           <%}%>
           <%- pagina == 'season' ? include('includes/'+pagina) : '' %>
           <%- pagina == 'organizacao' ? include('includes/'+pagina) : '' %>
           <%- pagina == 'inexistente' ? '<h2>Página inexistente</h2>' : '' %>
         </div>
-      </div>
-    </div>
-  </body>
+        </div>
+        </div>
+      <% include includes/footer.ejs %>
+    </main>
+
+  </div>
+</body>
+
 </html>

@@ -1,23 +1,24 @@
 <!doctype HTML>
 <html lang="pt">
+
 <head>
-<% include includes/header.ejs %>
-<title>BattleBuff - Salas</title>
+  <% include includes/header.ejs %>
+  <title>BattleBuff - Salas</title>
 </head>
+
 <body>
-  <div class="container min-100">
-    <div class="row">
-      <% include includes/side-bar.ejs %>
-      <div class="col-md-9">
-        <p></p>
+  <div class="page-wrapper chiller-theme toggled">
+    <% include includes/side-bar.ejs %>
+    <main class="page-content">
+      <div class="container-fluid min-100">
         <h3>Salas Abertas</h3>
         <table class="table">
           <thead>
             <tr class="table-light">
               <form action="/criar-sala" method="post">
-              <th scope="col">Criar sala</th>
-              <th colspan="2" scope="col"><input class="form-control" name="txtNome" type="text"></th>
-              <th scope="col"><input value="Criar" class="btn btn-primary form-control" type="submit"></th>
+                <th scope="col">Criar sala</th>
+                <th colspan="2" scope="col"><input class="form-control" name="txtNome" type="text"></th>
+                <th scope="col"><input value="Criar" class="btn btn-primary form-control" type="submit"></th>
               </form>
             </tr>
             <tr class="table-light">
@@ -29,12 +30,17 @@
           </thead>
           <tbody>
             <% for (var i = 0; i < results.length; i++) { %>
-              <tr>
-                <th scope="row"><%= results[i].nm_sala %></th>
-                <td class="text-success"><%= results[i].qtd_jogadores %>/6</td>
-                <td class="text-success"><%= results[i].nm_status %></td>
-                <td><a href="/sala/<%= results[i].id_sala %>" class="btn btn-outline-success form-control">Entrar</a></td>
-              </tr>
+            <tr>
+              <th scope="row">
+                <%= results[i].nm_sala %>
+              </th>
+              <td class="text-success">
+                <%= results[i].qtd_jogadores %>/6</td>
+              <td class="text-success">
+                <%= results[i].nm_status %>
+              </td>
+              <td><a href="/sala/<%= results[i].id_sala %>" class="btn btn-outline-success form-control">Entrar</a></td>
+            </tr>
             <% } %>
           </tbody>
         </table>
@@ -43,9 +49,9 @@
           <thead>
             <tr class="table-light">
               <form>
-              <th scope="col">Buscar partidas</th>
-              <th colspan="2" scope="col"><input class="form-control" type="text"></th>
-              <th scope="col"><input class="btn btn-primary form-control" type="submit"></th>
+                <th scope="col">Buscar partidas</th>
+                <th colspan="2" scope="col"><input class="form-control" type="text"></th>
+                <th scope="col"><input class="btn btn-primary form-control" type="submit"></th>
               </form>
             </tr>
             <tr class="table-light">
@@ -90,25 +96,27 @@
         </table>
         <nav aria-label="pagination example">
           <ul class="pagination justify-content-end">
-              <!--Previous button-->
-              <li class="page-item disabled">
-                  <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
-              </li>
+            <!--Previous button-->
+            <li class="page-item disabled">
+              <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
+            </li>
 
-              <!--Numbers-->
-              <li class="page-item"><a class="page-link bg-light" href="#">1</a></li>
-              <li class="page-item"><a class="page-link bg-light" href="#">2</a></li>
-              <li class="page-item"><a class="page-link bg-light" href="#">3</a></li>
+            <!--Numbers-->
+            <li class="page-item"><a class="page-link bg-light" href="#">1</a></li>
+            <li class="page-item"><a class="page-link bg-light" href="#">2</a></li>
+            <li class="page-item"><a class="page-link bg-light" href="#">3</a></li>
 
-              <!--Next button-->
-              <li class="page-item">
-                  <a class="page-link bg-light" href="#">Next</a>
-              </li>
+            <!--Next button-->
+            <li class="page-item">
+              <a class="page-link bg-light" href="#">Next</a>
+            </li>
           </ul>
         </nav>
       </div>
-    </div>
-</div>
-<% include includes/footer.ejs %>
+  </div>
+  <% include includes/footer.ejs %>
+  </main>
+  </div>
 </body>
+
 </html>
