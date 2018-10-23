@@ -1,0 +1,33 @@
+<form action="/alterarRanking" method="POST">
+  <div class="form-group">
+    <div class="col-md-9">
+      <label for="nomeSeason">Nome Season</label>
+      <input type="text" name="season" id="nomeSeason" class="form-control">
+    </div>
+  </div>
+    <div class="form-group">
+      <div class="col-md-9">
+        <input type="submit" value="Incluir Season" class="btn btn-primary">
+      </div>
+    </div>
+</form>
+<%if(result.rowCount > 0){%>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Data inicio</th>
+        <th>Data fim</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%for(var i=0; i < result.rowCount ; i++){%>
+        <tr>
+          <td><%= result.rows[i].nm_season%></td>
+          <td><%= result.rows[i].dt_inicio%></td>
+          <td><%= result.rows[i].dt_fim%></td>
+        </tr>
+      <%}%>
+    </tbody>
+  </table>
+<%}%>

@@ -32,12 +32,10 @@ module.exports.fileUploader = function(app,req,res){
 
     }
     if (nomeArquivo) {
-      var retorno = false;
       req.files.foto.mv('app/views/organizacoes/'+req.body.nome+'/'+nomeArquivo,function(err){
         if (err) {
           throw err;
         }
-        retorno = true;
       })
       return true;
     }
