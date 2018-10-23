@@ -1,46 +1,101 @@
-<div class="col-md-3 side-bar">
-  <%if(typeof sessao != "undefined"){%>
-    <img src="<%= ('https://battlerite.club/_Assets/images/avatar/' + img + '.png') %>">
-    <div class="profile-body">
-      <span class="profile-name"><%= nick%></span><br>
-      <div class="card text-white border-light mb-3 profile-card">
-        <div class="card-header">Status Geral</div>
-        <div class="card-body">
-          <span>Liga: ...</span><br>
-          <span>Partidas: ...</span><br>
-          <span>Main-Role: ...</span><br>
-        </div>
+<nav id="sidebar" class="sidebar-wrapper">
+  <div class="sidebar-content">
+    <div id="toggle-sidebar">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="sidebar-brand">
+      <a href="#">BATTLEBUFF</a>
+    </div>
+    <div class="sidebar-header">
+      <%if(typeof sessao != "undefined"){%>
+      <div class="user-pic">
+        <a href="#"><img class="img-responsive img-rounded" src="<%= ('https://battlerite.club/_Assets/images/avatar/' + img + '.png') %>" alt="User picture"></a>
       </div>
-      <div class="card text-white border-light mb-3 profile-card">
-        <div class="card-header">Status In-House</div>
-        <div class="card-body">
-          <span>Rank: ...</span><br>
-          <span>Partidas: ...</span><br>
-          <span>Winrate: ...</span><br>
-        </div>
+      <div class="user-info">
+        <span class="user-name"><a href="#">
+            <%= nick%></a></span>
+        <span class="user-role">Hero of BoulderPass</span>
+        <span class="user-status">
+          <span>Diamond League</span>
+        </span>
       </div>
-      <a href="/?sair=sim">Sair</a>
-    <%} else{%>
-          <img src="https://i.imgur.com/2s6YDY7.png">
-          <div class="profile-body">
-            <span class="profile-name">...</span><br>
-            <div class="card text-white border-light mb-3 profile-card">
-              <div class="card-header">Status Geral</div>
-              <div class="card-body">
-                <span>Liga: ...</span><br>
-                <span>Partidas: ...</span><br>
-                <span>Main-Role: ...</span><br>
-              </div>
-            </div>
-            <div class="card text-white border-light mb-3 profile-card">
-              <div class="card-header">Status In-House</div>
-              <div class="card-body">
-                <span>Rank: ...</span><br>
-                <span>Partidas: ...</span><br>
-                <span>Winrate: ...</span><br>
-              </div>
-            </div>
-      <center><a href="./auth"><img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png"></a></center>
+      <%} else{%>
+      <div class="user-pic">
+        <a href="#"><img class="img-responsive img-rounded" src="https://d1u5p3l4wpay3k.cloudfront.net/battlerite_gamepedia_en/f/f1/Avatar_DefaultAvatar.png" alt="User picture"></a>
+      </div>
+      <div class="user-info">
+        <span class="user-name"><a href="#">...</a></span>
+        <span class="user-role">Hero of BoulderPass</span>
+        <span class="user-status">
+          <span>Diamond League</span>
+        </span>
+      </div>
+      <%}%>
+    </div>
+    <%if(typeof sessao == "undefined"){%>
+    <div class="sidebar-search">
+      <center><a href="./auth"><img class="log-in" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png"></a></center>
+    </div>
     <%}%>
+    <!-- sidebar-search  -->
+    <div class="sidebar-menu">
+      <ul>
+        <li>
+          <a href="#">
+            <i class="fa fa-home"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-question"></i>
+            <span>Sobre</span>
+          </a>
+        </li>
+        <% if(autenticado) {%>
+        <li class="header-menu">
+          <span>In-house</span>
+        </li>
+        <li class="sidebar-dropdown">
+          <a href="#">
+            <i class="fa fa-gamepad"></i>
+            <span>Battlerite</span>
+          </a>
+          <div class="sidebar-submenu">
+            <ul>
+              <li>
+                <a href="#">Salas</a>
+              </li>
+              <li>
+                <a href="#">Rank</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <%}%>
+        <% if(typeof sessaoAdmin != "undefined") {%>
+        <li class="header-menu">
+          <span>Admin</span>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-columns"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <%}%>
+      </ul>
+    </div>
+    <!-- sidebar-menu  -->
   </div>
-</div>
+  <%if(typeof sessao != "undefined"){%>
+  <div class="sidebar-footer">
+    <a href="/?sair=sim">
+      <i class="fa fa-power-off"></i>
+    </a>
+  </div>
+  <%}%>
+</nav>
+</nav>

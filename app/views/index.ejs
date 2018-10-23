@@ -1,36 +1,43 @@
 <!doctype HTML>
 <html lang="pt">
+
 <head>
-<% include includes/header.ejs %>
-<title>BattleBuff - Home</title>
+  <% include includes/header.ejs %>
+  <title>BattleBuff - Home</title>
 </head>
+
 <body>
-  <div class="container min-100">
-    <div class="row">
-      <% include includes/side-bar.ejs %>
-      <div class="col-md-9">
-        <div class="jumbotron">
-          <img class="logo-header" src="/imgs/battlebuff-logo.png">
+
+  <div class="page-wrapper chiller-theme toggled">
+    <% include includes/side-bar.ejs %>
+    <main class="page-content">
+      <div class="container-fluid min-100">
+        <div class="jumbotron battlebuff-header">
+          <img class="logo-header" src="imgs/battlebuff-logo.png">
           <% if(erros) {%>
-            <div class="alert alert-danger">
-              <strong>Atenção!</strong>
-              <ul>
-                <% for(i=0;i < erros.length;i++) {%>
-                  <li><%= erros[i].msg %></li>
-                <%}%>
-              </ul>
-            </div>
+          <div class="alert alert-danger">
+            <strong>Atenção!</strong>
+            <ul>
+              <% for(i=0;i < erros.length;i++) {%>
+              <li>
+                <%= erros[i].msg %>
+              </li>
+              <%}%>
+            </ul>
+          </div>
           <%}%>
           <% if(!autenticado && locals.sessao) {%>
-            <form class="form-inline" action="registerKey" method="post">
-              <div class="active-key">
-                <input type="password" class="form-control" placeholder="Insira uma chave de ativação" name="key">
-                <button type="submit" class="btn btn-danger">Enviar</button>
-              </div>
-            </form>
+          <form class="form-inline" action="registerKey" method="post">
+            <div class="active-key">
+              <input type="password" class="form-control" placeholder="Insira uma chave de ativação" name="key">
+              <button type="submit" class="btn btn-danger">Enviar</button>
+            </div>
+          </form>
           <%}%>
         </div>
-        <center><h3>In-House</h3></center>
+        <center>
+          <h3>In-House</h3>
+        </center>
         <!--BATTLERITE-->
         <div class="game">
           <div class="head">
@@ -40,17 +47,29 @@
             <span class="title">Battlerite</span>
             <span class="salas text-info">5 salas abertas</span>
             <% if(!autenticado) {%>
-              <span class="error">Não autorizado</span>
+            <span class="error">Não autorizado</span>
             <%} else{%>
-              <form>
-                <a href="/sala" class="btn btn-success">Entrar</a>
-              </form>
+            <form>
+              <a href="/sala" class="btn btn-success">Entrar</a>
+            </form>
             <%}%>
           </div>
         </div>
-      </div>
+        <!--DOTA-->
+        <div class="game">
+          <div class="head">
+            <img src="imgs/dota-logo.png">
+          </div>
+          <div class="body">
+            <span class="title">DOTA 2</span>
+            <span class="salas text-info">10 salas abertas</span>
+            <span class="error">EM BREVE</span>
+          </div>
+        </div>
+        <% include includes/footer.ejs %>
+      </main>
+      <!-- page-content" -->
     </div>
-</div>
-<% include includes/footer.ejs %>
 </body>
+
 </html>
