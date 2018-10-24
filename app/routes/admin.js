@@ -9,6 +9,9 @@ module.exports = function(app) {
   app.post('/postOrganizacao',(req,res)=>{
     app.app.controller.admin.postOrganizacao(app,req,res);
   })
+  app.post('/postKey',(req,res)=>{
+    app.app.controller.admin.postKey(app,req,res);
+  })
 
   app.post('/alterarRanking',function(req,res){
 		app.app.controller.admin.alterarRanking(app,req,res);

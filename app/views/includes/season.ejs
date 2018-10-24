@@ -24,8 +24,8 @@
       <%for(var i=0; i < result.rowCount ; i++){%>
         <tr>
           <td><%= result.rows[i].nm_season%></td>
-          <td><%= result.rows[i].dt_inicio%></td>
-          <td><%= result.rows[i].dt_fim%></td>
+          <td><%= result.rows[i].dt_inicio != undefined ? moment(result.rows[i].dt_inicio).format('DD/MM/YYYY') : ''%></td>
+          <td><%= result.rows[i].dt_fim != undefined ? moment(result.rows[i].dt_fim).format('DD/MM/YYYY') : ''%></td>
         </tr>
       <%}%>
     </tbody>

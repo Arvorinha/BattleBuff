@@ -7,7 +7,7 @@ SeasonDAO.prototype.findBySeason = function(nm_season, cb) {
 		if (err) {
 			throw err;
 		}
-		client.query('SELECT NM_SEASON FROM TB_SEASON WHERE NM_SEASON = $1',[nm_season],cb);
+		client.query('SELECT NM_SEASON FROM TB_SEASON WHERE NM_SEASON = $1',[nm_season],cb,done());
 	})
 };
 
@@ -16,7 +16,7 @@ SeasonDAO.prototype.insert = function (nm_season, cb) {
     if (err) {
       throw err;
     }
-    client.query("INSERT INTO TB_SEASON(NM_SEASON) VALUES($1)",[nm_season], cb);
+    client.query("INSERT INTO TB_SEASON(NM_SEASON) VALUES($1)",[nm_season], cb,done());
   })
 };
 
@@ -27,7 +27,7 @@ SeasonDAO.prototype.findAll = function (cb) {
 		}
 		var query = "SELECT nm_season,date_part('month',dt_inicio) +'/'+ date_part('day',dt_inicio) + '/' + date_part('year',dt_inicio) as 'dataInicio " ;
 		query += 'FROM TB_SEASON'
-		client.query('SELECT * FROM TB_SEASON',cb);
+		client.query('SELECT * FROM TB_SEASON',cb,done());
 	})
 };
 

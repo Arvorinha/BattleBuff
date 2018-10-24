@@ -7,7 +7,7 @@ keyDAO.prototype.findByKey = function (key,callback) {
     if (err) {
       return console.log(err);
     }
-    client.query('SELECT * FROM TB_KEY WHERE TX_KEY=$1',[key],callback);
+    client.query('SELECT * FROM TB_KEY WHERE TX_KEY=$1',[key],callback,done());
   });
 }
 
@@ -16,7 +16,7 @@ keyDAO.prototype.insert = function (key,callback) {
     if (err) {
       return console.log(err);
     }
-    client.query('INSERT INTO TB_KEY(TX_KEY) VALUES($1)',[key],callback);
+    client.query('INSERT INTO TB_KEY(TX_KEY) VALUES($1)',[key],callback,done());
   })
 };
 
@@ -25,7 +25,7 @@ keyDAO.prototype.findByUserNull = function (callback) {
     if (err) {
       return console.log(err);
     }
-    client.query('SELECT * FROM TB_KEY WHERE ID_JOGADOR IS NULL',callback);
+    client.query('SELECT * FROM TB_KEY WHERE ID_JOGADOR IS NULL',callback,done());
   })
 };
 
@@ -38,7 +38,7 @@ keyDAO.prototype.findByUserNotNull = function (callback) {
     sql += "FROM TB_KEY a "
     sql += "INNER JOIN TB_JOGADOR b ON a.ID_JOGADOR = b.ID_JOGADOR ";
     sql += "WHERE a.ID_JOGADOR IS NOT NULL";
-    client.query(sql,callback);
+    client.query(sql,callback,done());
   })
 };
 
@@ -47,7 +47,7 @@ keyDAO.prototype.registerKey = function (id_jogador,key,callback) {
     if (err) {
       return console.log(err);
     }
-    client.query("UPDATE TB_KEY SET ID_JOGADOR = $1 WHERE TX_KEY=$2 AND ID_JOGADOR IS NULL",[id_jogador,key],callback);
+    client.query("UPDATE TB_KEY SET ID_JOGADOR = $1 WHERE TX_KEY=$2 AND ID_JOGADOR IS NULL",[id_jogador,key],callback,done());
   })
 };
 
@@ -56,7 +56,7 @@ keyDAO.prototype.findByIdJogador = function (id_jogador,callback) {
     if (err) {
       return console.log(err);
     }
-    client.query("SELECT ID_JOGADOR FROM TB_KEY WHERE ID_JOGADOR=$1 AND ID_JOGADOR IS NOT NULL",[id_jogador],callback);
+    client.query("SELECT ID_JOGADOR FROM TB_KEY WHERE ID_JOGADOR=$1 AND ID_JOGADOR IS NOT NULL",[id_jogador],callback,done());
   })
 
 };

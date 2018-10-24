@@ -1,7 +1,4 @@
-module.exports.key =function(app, req ,res){
-  if (!req.session.verificarSessao) {
-    return res.redirect('auth');
-  }
+module.exports.key =function(app, req ,res, paginaNome){
   var pool = app.config.dbConnection;
   var keyDAO = new app.app.model.keyDAO(pool);
   var AdminDAO = new app.app.model.AdminDAO(pool);
@@ -9,15 +6,6 @@ module.exports.key =function(app, req ,res){
   var finalJson = [];
   var keys = [];
 
-  AdminDAO.findById(req.session.id_jogador,function(err,result){
-    if (err) {
-      throw err;
-    }
-    console.log(result);
-    if (!result.rowCount > 0) {
-      res.redirect('/');
-    }
-  })
   keyDAO.findByUserNull(function(err,result){
     if (err) {
       return console.log(err);
@@ -47,7 +35,7 @@ module.exports.key =function(app, req ,res){
               })
             }
             console.log(finalJson);
-            res.render('key', {
+            res.render('admin', {
               erros:"",
               autenticado:req.session.autenticado,
               sessao : req.session.verificarSessao,
@@ -59,7 +47,9 @@ module.exports.key =function(app, req ,res){
               maximoItem: maxItemsPerPage,
               numPaginas: numPaginas,
               findByUserNull: findByUserNull,
-              findByUserNotNull: finalJson
+              findByUserNotNull: finalJson,
+              pagina:paginaNome,
+              sucesso: ''
             });
 
           }).catch((error) => {
@@ -67,7 +57,7 @@ module.exports.key =function(app, req ,res){
           });
           return;
         }
-        res.render('key', {
+        res.render('admin', {
           erros:"",
           autenticado:req.session.autenticado,
           sessao : req.session.verificarSessao,
@@ -79,7 +69,9 @@ module.exports.key =function(app, req ,res){
           maximoItem: maxItemsPerPage,
           numPaginas: numPaginas,
           findByUserNull: findByUserNull,
-          findByUserNotNull: ''
+          findByUserNotNull: '',
+          pagina:paginaNome,
+          sucesso: ''
         });
       }
       startPage();
@@ -131,6 +123,7 @@ module.exports.postKey = function(app,req,res){
             }
             else {
               finalKey[qtdKey] = key;
+              console.log(finalKey);
             }
           }
         }

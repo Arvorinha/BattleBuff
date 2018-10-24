@@ -1,3 +1,5 @@
+var fs = require('fs')
+var moment = require('moment')
 module.exports.admin = function(app,req,res){
   res.render('admin',{
     erros:'',
@@ -12,13 +14,13 @@ module.exports.pagina = function(app,req,res){
   var sDAO = new app.app.model.SeasonDAO(connection);
   var oDAO = new app.app.model.OrganizacaoDAO(connection)
   async function render(pagina,result) {
-    console.log(result);
     res.render('admin',{
       erros:'',
       sucesso: '',
       pagina:pagina,
       session: req.session,
-      result: result
+      result: result,
+      moment:moment
     })
   }
 
@@ -42,7 +44,12 @@ module.exports.pagina = function(app,req,res){
   }
 
   async function getAllOrganizacao() {
-
+    oDAO.findAll(function(err,result){
+      if (err) {
+        throw err;
+      }
+      render(req.params.pagina,result);
+    })
   }
 
   switch (req.params.pagina) {
@@ -50,7 +57,7 @@ module.exports.pagina = function(app,req,res){
       break;
     case 'organizacao':getAllOrganizacao();
       break;
-    case 'a':render(req.params.pagina);
+    case 'key':app.app.controller.key.key(app,req,res,req.params.pagina);
       break;
     default:render('inexistente');
       break;
@@ -59,58 +66,11 @@ module.exports.pagina = function(app,req,res){
 }
 
 module.exports.postOrganizacao = function(app,req,res) {
-  function renderErro(msg) {
-    var erros = [
-      {msg:msg}
-    ]
-    res.render('admin',{
-      session:req.session,
-      erros: erros,
-      sucesso:'',
-      pagina: 'organizacao'
-    })
-  }
+  app.app.controller.postOrganizacao.post(app,req,res);
+}
 
-  function renderSucesso(msg) {
-    var sucesso = [
-      {msg:msg}
-    ]
-    res.render('admin',{
-      session:req.session,
-      sucesso: sucesso,
-      erros:'',
-      pagina: 'organizacao'
-    })
-  }
-
-  req.assert('nome','Nome da organizacao é obrigatório').notEmpty();
-  req.assert('nome','Nome da organizacao deve ter entre 2 e 50').len(2,50);
-
-  req.assert('pais','Nome do país é obrigatório').notEmpty();
-  req.assert('pais','Nome do deve ter entre 5 e 50').len(2,50);
-
-  var erros = req.validationErrors();
-
-  if (erros) {
-    return res.render('admin',{
-      session:req.session,
-      erros: erros,
-      sucesso:'',
-      pagina: 'organizacao'
-    })
-  }
-
-  if (!req.files.foto) {
-    renderErro('Foto é obrigatório')
-    return;
-  }
-
-  var imageUploader = app.app.controller.fileUploader.fileUploader(app,req,res);
-
-  if (imageUploader) {
-    renderSucesso('Organizacao incluida com sucesso');
-  }
-
+module.exports.postKey = function(app,req,res) {
+  app.app.controller.key.postKey(app,req,res)
 }
 
 module.exports.alterarRanking = function (app,req,res){

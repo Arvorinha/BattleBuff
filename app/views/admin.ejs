@@ -16,7 +16,7 @@
             <ul>
               <li><a href="/admin/season">Season</a></li>
               <li><a href="/admin/organizacao">Organizacao</a></li>
-              <li><a href="/admin/rank">Rank</a></li>
+              <li><a href="/admin/key">key</a></li>
             </ul>
           </div>
 
@@ -47,6 +47,7 @@
           <%}%>
           <%- pagina == 'season' ? include('includes/'+pagina) : '' %>
           <%- pagina == 'organizacao' ? include('includes/'+pagina) : '' %>
+          <%- pagina == 'key' ? include('includes/'+pagina) : '' %>
           <%- pagina == 'inexistente' ? '<h2>Página inexistente</h2>' : '' %>
         </div>
         </div>

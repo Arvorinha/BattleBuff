@@ -1,0 +1,80 @@
+  <div class="row">
+    <div class="col-md-9">
+      <form class="" method="post" action="/postKey">
+       <select class="form-control" name="quantidade" style="float:left;width:15%">
+         <option value="0">---Select---</option>
+         <option value="1">1</option>
+         <option value="5">5</option>
+         <option value="10">10</option>
+         <option value="15">15</option>
+         <option value="20">20</option>
+       </select>
+       <button type="submit" name="btnGerarKey" class="btn btn" style="margin-left:2%;margin-top:0.1%;">GerarKey</button>
+     </form>
+       <p></p>
+       <table class="table">
+      <thead>
+        <tr class="table-light">
+        </tr>
+        <tr class="table-light">
+          <th scope="col">Key</th>
+          <th scope="col">Dono</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(queryPaginacao > 1) {%>
+          <% var i=10*(queryPaginacao-1); %>
+          <% maximoItem = maximoItem * queryPaginacao; %>
+          <% if(findByUserNotNull.rowCount && findByUserNotNull.rowCount > 0) {%>
+            <% for(i; i < findByUserNotNull && i < maximoItem;i++){%>
+              <tr>
+                <th scope="row"><%=findByUserNotNull[i].tx_key%></th>
+                <th><%=findByUserNotNull[i].nick%></th>
+              </tr>
+              <%}%>
+          <%}%>
+          <% maximoItem = maximoItem - findByUserNotNull.length; %>
+          <% i= i - findByUserNotNull.length %>
+          <% if(findByUserNull.rowCount && findByUserNull.rowCount > 0) {%>
+            <% for(i; i < findByUserNull.rowCount && i < maximoItem;i++) {%>
+              <tr>
+                <th scope="row"><%=findByUserNull.rows[i].tx_key%></th>
+                <th></th>
+              </tr>
+              <%}%>
+          <%}%>
+        <%}else{%>
+        <% var i=0; %>
+        <% if(findByUserNotNull && findByUserNotNull.length > 0) {%>
+          <% for(i; i < findByUserNotNull.length && i < maximoItem;i++){%>
+            <tr>
+              <th scope="row"><%=findByUserNotNull[i].tx_key%></th>
+              <th><%=findByUserNotNull[i].nick%></th>
+            </tr>
+            <%}%>
+        <%}%>
+        <% maximoItem = maximoItem - findByUserNotNull.length; %>
+        <% i= i - findByUserNotNull.length %>
+        <% if(findByUserNull.rowCount && findByUserNull.rowCount > 0) {%>
+          <% for(i; i < findByUserNull.rowCount && i < maximoItem;i++) {%>
+            <tr>
+              <th scope="row"><%=findByUserNull.rows[i].tx_key%></th>
+              <th></th>
+            </tr>
+            <%}}%>
+        <%}%>
+      </tbody>
+    </table>
+    <nav aria-label="pagination example">
+      <ul class="pagination justify-content-end">
+          <li class="page-item disabled">
+              <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
+          </li>
+          <% for(var i=1;i <= numPaginas;i++) {%>
+            <li class="page-item"><a class="page-link bg-light" href="?pagina=<%= i %>"><%= i %></a></li>
+          <%}%>
+          <li class="page-item">
+              <a class="page-link bg-light" href="#">Next</a>
+          </li>
+      </ul>
+  </nav>
