@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <% include includes/header %>
+    <title></title>
+  </head>
+  <body>
+    <div class="page-wrapper chiller-theme toggled">
+      <% include includes/side-bar.ejs %>
+      <main class="page-content">
+        <div class="container-fluid min-100">
+          <% if(error == 404) {%>
+            <h1>Jogador não encontrado</h1>
+            <h3>Adquira o jogo ante de usar a in-house</h3>
+            <h5>Clique <a href="https://store.steampowered.com/app/504370/Battlerite/">AQUI</a> para adquirir o jogo</h5>
+          <%}else{%>
+            <h1>Error <%=error%></h1>
+            <h3>Tente novamente, se persistir no erro contate um adm</h3>
+          <%}%>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

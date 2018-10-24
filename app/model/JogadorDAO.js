@@ -46,6 +46,15 @@ JogadorDAO.prototype.update = function(STEAM64,NM_JOGADOR,CAMINHO_IMG, callback)
   });
 }
 
+JogadorDAO.prototype.updateMmr = function(cb){
+  this._pool().connect((err,client,done)=>{
+    if (err) {
+      throw err
+    }
+    client.query('UPDATE TB_JOGADOR SET MMR_JOGADOR = 100',cb,done());
+  })
+}
+
 module.exports = function(){
   return JogadorDAO;
 }

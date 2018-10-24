@@ -67,7 +67,8 @@ module.exports.verify = function(app, req ,res){
             sessoes();
           })
         }).catch((error) => {
-            console.log(error.response.status);
+          req.session.erros = error.response.status;
+          return res.redirect('/error')
         });
       }else {
         battlerite().getPlayerBySteamId(steamID).then((response) => {

@@ -30,7 +30,8 @@ module.exports.pagina = function(app,req,res){
       pagina: '',
       sucesso: '',
       session:req.session,
-      result: ''
+      result: '',
+      moment:moment
     })
   }
 
@@ -77,67 +78,103 @@ module.exports.alterarRanking = function (app,req,res){
 	req.assert('season','O campo é obrigatorio').notEmpty();
 	req.assert('season','O campo deve ter entre 8 e 20').len(8,20);
 
+  var pool = app.config.dbConnection;
+	var sDAO = new app.app.model.SeasonDAO(pool);
+	var rDAO = new app.app.model.RankDAO(pool);
+  var jDAO = new app.app.model.JogadorDAO(pool);
+	var seasonNova = req.body.season;
+
+  function getAllSeason() {
+    return new Promise((resolve,reject)=>{
+      sDAO.findAll((err,result)=>{
+        if (err) {
+          throw err;
+        }
+        resolve(result)
+      })
+    })
+  }
+
 	var erros = req.validationErrors();
 	var dadosForm = {
 		form:req.body
 	}
 	if(erros){
-		res.render('admin',{
-			session:req.session,
-			erros:erros,
-			sucesso: ' ',
-      pagina: 'season'
-		});
-		return;
+    return getAllSeason().then(function (value) {
+      res.render('admin',{
+        session:req.session,
+        erros:erros,
+        sucesso: '',
+        pagina: 'season',
+        result:value,
+        moment:moment
+      });
+    })
 	}
 
-	function renderErro(erro) {
+	function renderErro(erro,result) {
 		var erros =[
-			{msg:erro},
-			dadosForm
+			{msg:erro}
 		]
 		res.render('admin',{
 			session:req.session,
 			erros: erros,
 			sucesso: '',
-      pagina : 'season'
+      pagina : 'season',
+      result:result,
+      moment:moment
 		});
 	}
 
-	function renderSucesso(sucesso) {
+	function renderSucesso(sucesso,result) {
 		res.render('admin',{
 			session:req.session,
 			erros: '',
 			sucesso: [{msg:sucesso}],
-      pagina: 'season'
+      pagina: 'season',
+      result:result,
+      moment:moment
 		});
 	}
-
-	var pool = app.config.dbConnection;
-	var sDAO = new app.app.model.SeasonDAO(pool);
-	var seasonNova = req.body.season;
 
 	sDAO.findBySeason(seasonNova,function(err,result){
 		if (err) {
 			throw err;
 		}
 		if (result.rowCount > 0) {
-			console.log(result);
-			renderErro('Já existe uma season com esse nome');
-			return;
+      return getAllSeason().then(function (value) {
+        renderErro('Já existe uma season com esse nome',value);
+      })
 		}
-		sDAO.insert(seasonNova,function(err,result){
-			if (err) {
-				throw err;
-			}
-			if (result.rowCount > 0) {
-				renderSucesso('Nova season registrada com sucesso');
-				return;
-			}else {
-				console.error(result);
-				renderErro('Ocorreu algum erro, verifique o log do servidor ou contade algum adm');
-				return;
-			}
-		})
+    sDAO.updateDtFim((err,result)=>{
+      if (err) {
+        throw err;
+      }
+      sDAO.insert(seasonNova,function(err,result){
+  			if (err) {
+  				throw err;
+  			}
+  			if (result.rowCount > 0) {
+          // result.rows[0].id_season
+          rDAO.insert((err,result)=>{
+            if (err) {
+              throw err;
+            }
+            jDAO.updateMmr((err,result)=>{
+              if (err) {
+                throw err;
+              }
+              return getAllSeason().then(function (value) {
+                renderSucesso('Nova season registrada com sucesso',value);
+              })
+            })
+          })
+  			}else {
+          return getAllSeason().then(function (value) {
+            renderErro('Ocorreu algum erro, verifique o log do servidor ou contade algum adm',value);
+          })
+  			}
+  		})
+    })
 	})
 }

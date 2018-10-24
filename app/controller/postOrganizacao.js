@@ -68,24 +68,41 @@ module.exports.post = function(app,req,res) {
     return;
   }
 
-  var imageUploader = app.app.controller.fileUploader.fileUploader(app,req,res);
-
-  if (imageUploader) {
-    if (fs.existsSync('app/views/public/organizacoes/'+req.body.nome+'/')) {
-      var caminho = 'organizacoes/'+req.body.nome+'/'+req.files.foto.name;
-      oDAO.insert(req.body.nome,caminho,req.body.pais,function(err,result) {
-        if (err) {
-          throw err;
+  var imageUploader = new Promise(function(resolve,reject){
+    var uploadResult = app.app.controller.fileUploader.fileUploader(app,req,res)
+    if (typeof uploadResult == 'undefined') {
+      setTimeout(function () {
+        if (fs.existsSync('app/views/public/organizacoes/'+req.body.nome+'/')) {
+          resolve(true)
         }
-        execGetAll().then(function(value){
-          renderSucesso('Órganízacaô incluida com sucesso',value);
+        else {
+          resolve(false);
+        }
+      },700)
+    }else {
+      resolve(uploadResult)
+    }
+  })
+
+  imageUploader.then(function(value) {
+    console.log(value);
+    if (value) {
+      if (fs.existsSync('app/views/public/organizacoes/'+req.body.nome+'/')) {
+        var caminho = 'organizacoes/'+req.body.nome+'/'+req.files.foto.name;
+        oDAO.insert(req.body.nome,caminho,req.body.pais,function(err,result) {
+          if (err) {
+            throw err;
+          }
+          execGetAll().then(function(value){
+            renderSucesso('Órganízacaô incluida com sucesso',value);
+          })
+          return;
         })
-        return;
+      }
+    }else {
+      execGetAll().then(function(value) {
+        renderErro('Organização já existe',value)
       })
     }
-  }else {
-    execGetAll().then(function(value) {
-      renderErro('Organização já existe',value)
-    })
-  }
+  })
 }

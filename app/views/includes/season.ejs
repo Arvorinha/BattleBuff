@@ -1,4 +1,26 @@
 <form action="/alterarRanking" method="POST">
+  <!-- Modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title text-primary" id="exampleModalLongTitle">Confirmação</h3>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-danger">Realmente deseja trocar a season atual para a nova ?</h4>
+          <h5 class="text-danger">Obs: Não é possivel voltar atrás</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Sim</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Modal -->
   <div class="form-group">
     <div class="col-md-9">
       <label for="nomeSeason">Nome Season</label>
@@ -7,7 +29,7 @@
   </div>
     <div class="form-group">
       <div class="col-md-9">
-        <input type="submit" value="Incluir Season" class="btn btn-primary">
+        <input type="button" value="Incluir Season" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">
       </div>
     </div>
 </form>
