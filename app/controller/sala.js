@@ -112,11 +112,8 @@ module.exports.sala = function(app,req,res){
           res.render('sala', {
             results: result.rows,
             sala : req.params.sala,
-            sessao : req.session.verificarSessao,
-            nick : req.session.nick ,
-            steamid : req.session.steamid,
-            btrid : req.session.btrid,
-            img : req.session.img});
+            session:req.session
+          });
         }
       });
     }
@@ -141,17 +138,11 @@ module.exports.entrarSala = function(app,req,res){
           if(result.rows.length >= 1){
             res.render('checksala', {
               sala : req.params.sala,
-              sessao : req.session.verificarSessao,
-              nick : req.session.nick,
-              steamid : req.session.steamid,
-              btrid : req.session.btrid,
-              img : req.session.img
+              session:req.session
             });
           }else {
             res.render('partida', {
-              nick : req.session.nick,
-              btrid : req.session.btrid,
-              img : req.session.img
+              session:req.session
             });
           }
         }
@@ -182,18 +173,12 @@ module.exports.checarSala = function(app,req,res){
           res.render('checksala', {
             erros : "",
             sala : req.params.sala,
-            sessao : req.session.verificarSessao,
-            nick : req.session.nick,
-            steamid : req.session.steamid,
-            btrid : req.session.btrid,
-            img : req.session.img
+            session:req.session
           });
           return;
         }
         res.render('partida', {
-          nick : req.session.nick,
-          btrid : req.session.btrid,
-          img : req.session.img
+          session:req.session
         });
       });
     }

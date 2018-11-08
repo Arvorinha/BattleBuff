@@ -10,11 +10,13 @@ module.exports.key =function(app, req ,res, paginaNome){
     if (err) {
       return console.log(err);
     }
+    console.log(result);
     var findByUserNull = result;
     keyDAO.findByUserNotNull(function(err,result){
       if (err) {
         return console.log(err);
       }
+      console.log(result);
       result.rows.forEach(function(data){
         keys.push(data.btrid)
       })
@@ -37,12 +39,7 @@ module.exports.key =function(app, req ,res, paginaNome){
             console.log(finalJson);
             res.render('admin', {
               erros:"",
-              autenticado:req.session.autenticado,
-              sessao : req.session.verificarSessao,
-              nick : req.session.nick ,
-              steamid : req.session.steamid,
-              btrid : req.session.btrid,
-              img : req.session.img,
+              session:req.session,
               queryPaginacao: pagina,
               maximoItem: maxItemsPerPage,
               numPaginas: numPaginas,
@@ -59,12 +56,7 @@ module.exports.key =function(app, req ,res, paginaNome){
         }
         res.render('admin', {
           erros:"",
-          autenticado:req.session.autenticado,
-          sessao : req.session.verificarSessao,
-          nick : req.session.nick ,
-          steamid : req.session.steamid,
-          btrid : req.session.btrid,
-          img : req.session.img,
+          session:req.session,
           queryPaginacao: pagina,
           maximoItem: maxItemsPerPage,
           numPaginas: numPaginas,

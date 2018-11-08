@@ -26,7 +26,7 @@
             </ul>
           </div>
           <%}%>
-          <% if(!autenticado && locals.sessao) {%>
+          <% if(!session.autenticado && locals.sessao) {%>
           <form class="form-inline" action="registerKey" method="post">
             <div class="active-key">
               <input type="password" class="form-control" placeholder="Insira uma chave de ativação" name="key">
@@ -46,7 +46,7 @@
           <div class="body">
             <span class="title">Battlerite</span>
             <span class="salas text-info">5 salas abertas</span>
-            <% if(!autenticado) {%>
+            <% if(!session.autenticado) {%>
             <span class="error">Não autorizado</span>
             <%} else{%>
             <form>

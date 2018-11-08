@@ -1,4 +1,5 @@
 module.exports.index = function(app, req, res) {
+  console.log(req.session);
   if (req.session.verificarSessao) {
     if (typeof req.query.sair != "undefined" && req.query.sair == "sim") {
       console.log(req.query.sair);
@@ -13,19 +14,13 @@ module.exports.index = function(app, req, res) {
       console.log(req.session.sessaoAdmin + 'b');
       res.render('index', {
         erros: "",
-        autenticado: req.session.autenticado,
-        sessao: req.session.verificarSessao,
-        nick: req.session.nick,
-        steamid: req.session.steamid,
-        btrid: req.session.btrid,
-        img: req.session.img,
-        sessaoAdmin: req.session.sessaoAdmin
+        session:req.session
       });
     }
   } else {
     res.render('index', {
       erros: "",
-      autenticado: false
+      session:req.session
     });
   }
 }
@@ -49,12 +44,7 @@ module.exports.registerKey = function(app, req, res) {
   if (erros) {
     res.render('index', {
       erros: erros,
-      autenticado: req.session.autenticado,
-      sessao: req.session.verificarSessao,
-      nick: req.session.nick,
-      steamid: req.session.steamid,
-      btrid: req.session.btrid,
-      img: req.session.img
+      session:req.session
     })
     return;
   }
@@ -71,12 +61,7 @@ module.exports.registerKey = function(app, req, res) {
         if (keyUsada) {
           res.render('index', {
             erros: keyUsada,
-            autenticado: req.session.autenticado,
-            sessao: req.session.verificarSessao,
-            nick: req.session.nick,
-            steamid: req.session.steamid,
-            btrid: req.session.btrid,
-            img: req.session.img
+            session:req.session
           })
           return;
         }
@@ -96,12 +81,7 @@ module.exports.registerKey = function(app, req, res) {
       if (keyInvalida) {
         res.render('index', {
           erros: keyInvalida,
-          autenticado: req.session.autenticado,
-          sessao: req.session.verificarSessao,
-          nick: req.session.nick,
-          steamid: req.session.steamid,
-          btrid: req.session.btrid,
-          img: req.session.img
+          session:req.session
         })
         return;
       }

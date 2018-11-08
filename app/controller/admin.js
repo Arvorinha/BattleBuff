@@ -1,6 +1,9 @@
 var fs = require('fs')
 var moment = require('moment')
 module.exports.admin = function(app,req,res){
+  if (!req.session.sessaoAdmin) {
+    return res.redirect('/');
+  }
   res.render('admin',{
     erros:'',
     sucesso: '',
@@ -10,6 +13,12 @@ module.exports.admin = function(app,req,res){
 }
 
 module.exports.pagina = function(app,req,res){
+  if (!req.session.sessaoAdmin) {
+    return res.redirect('/');
+  }
+  if (!req.session.sessaoAdmin) {
+    res.redirect('/');
+  }
   var connection = app.config.dbConnection;
   var sDAO = new app.app.model.SeasonDAO(connection);
   var oDAO = new app.app.model.OrganizacaoDAO(connection)

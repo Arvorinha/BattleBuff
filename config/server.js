@@ -18,8 +18,9 @@ app.use(expressValidator());
 
 app.use(expressSession({
    resave: false,
-   saveUninitialized: false,
-   secret: 'wsatdgyfjdsfhgj'
+   saveUninitialized: true,
+   secret: 'wsatdgyfjdsfhgj',
+   cookie: { maxAge: 10080000 }
 }));
 app.use(steam.middleware({
     realm: 'http://localhost:5000/',

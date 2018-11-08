@@ -9,13 +9,13 @@
       <a href="#">BATTLEBUFF</a>
     </div>
     <div class="sidebar-header">
-      <%if(typeof sessao != "undefined"){%>
+      <%if(session.autenticado){%>
       <div class="user-pic">
-        <a href="#"><img class="img-responsive img-rounded" src="<%= ('https://battlerite.club/_Assets/images/avatar/' + img + '.png') %>" alt="User picture"></a>
+        <a href="#"><img class="img-responsive img-rounded" src="<%= ('https://battlerite.club/_Assets/images/avatar/' + session.img + '.png') %>" alt="User picture"></a>
       </div>
       <div class="user-info">
         <span class="user-name"><a href="#">
-            <%= nick%></a></span>
+            <%= session.nick%></a></span>
         <span class="user-role">Hero of BoulderPass</span>
         <span class="user-status">
           <span>Diamond League</span>
@@ -34,7 +34,7 @@
       </div>
       <%}%>
     </div>
-    <%if(typeof sessao == "undefined"){%>
+    <%if(!session.autenticado){%>
     <div class="sidebar-search">
       <center><a href="./auth"><img class="log-in" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png"></a></center>
     </div>
@@ -54,7 +54,7 @@
             <span>Sobre</span>
           </a>
         </li>
-        <% if(typeof autenticado != "undefined") {%>
+        <% if(typeof session.autenticado != "undefined") {%>
         <li class="header-menu">
           <span>In-house</span>
         </li>
@@ -75,7 +75,7 @@
           </div>
         </li>
         <%}%>
-        <% if(typeof sessaoAdmin != "undefined") {%>
+        <% if(typeof session.sessaoAdmin != "undefined") {%>
         <li class="header-menu">
           <span>Admin</span>
         </li>
@@ -90,7 +90,7 @@
     </div>
     <!-- sidebar-menu  -->
   </div>
-  <%if(typeof sessao != "undefined"){%>
+  <%if(session.autenticado){%>
   <div class="sidebar-footer">
     <a href="/?sair=sim">
       <i class="fa fa-power-off"></i>
