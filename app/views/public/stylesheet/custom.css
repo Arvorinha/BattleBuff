@@ -112,6 +112,8 @@ html, body {
 
 .page-wrapper.toggled .sidebar-wrapper {
     left: 0px;
+    border-right: 1px solid #2B2B2B;
+    box-shadow: 5px 0px 5px #181818;
 }
 
 @media screen and (min-width: 768px) {
@@ -474,7 +476,7 @@ body {
 }
 
 .battlebuff-header{
-  background: #181818;
+  background: #0C0C0C;
   border: 1px solid;
   border-color: #343434;
 }

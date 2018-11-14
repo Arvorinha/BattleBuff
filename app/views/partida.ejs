@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <script src="/socket.io/socket.io.js"></script>
-  	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  	<script>
 
-      var socket = io.connect();
+<head>
+  <% include includes/header.ejs %>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <title>Partida</title>
+</head>
 
-      var url = window.location.href;
-      var salaID = url.split("/")[4];
+<body onload="credencial(1,'BalacoBakko',39244,6);">
+  <div class="page-wrapper chiller-theme toggled">
+    <% include includes/side-bar.ejs %>
+    <main class="page-content">
+      <div class="container-fluid min-100">
+        <div class="card">
+          <div class="card-header">
+            Sala do tetis
+          </div>
+          <div class="card-subheader">
+            <div class="card-tabela">Time A</div>
+            <div class="card-tabela">Picks</div>
+            <div class="card-tabela">Time B</div>
+          </div>
+          <div class="card-body">
+            <div class="players" id="time1">
+            </div>
+            <div class="players" id="picks">
+            </div>
+            <div class="players" id="time2">
+            </div>
+          </div>
+        </div>
+        Pessoas na sala: <span id="nPessoas">0</span>
+      </div>
+      <% include includes/footer.ejs %>
+    </main>
+    <script src="../js/socketPartida.js"></script>
+</body>
 
-      socket.on('connect', function() {
-         socket.emit('room', salaID);
-      });
-
-      socket.on('room users', function(userlist){
-        document.getElementById("nPessoas").innerHTML = userlist;
-      });
-
-      function credencial(btrid, nick, img){
-        socket.emit('new user', btrid, nick, img, salaID);
-      }
-
-    </script>
-    <title>Salas</title>
-  </head>
-  <body onload="credencial(<%= btrid%>,'<%= nick%>',<%= img%>);">
-    Pessoas na sala: <span id="nPessoas">0</span>
-  </body>
 </html>

@@ -132,7 +132,6 @@ function atualizarTela() {
   imgLink = 'https://battlerite.club/_Assets/images/avatar/' + time1[key2][0].idimg + '.png';
 
   perfil = headerRowCapitao + time1[key2][0].id + '">';
-  perfil += '<img class="img-icon" src="../imgs/capitao_icon.png">';
   perfil += '<img class="img-profile" src="' + imgLink + '"></img>';
   perfil += '<div class="profile-itens">';
   perfil += '<span class="item">'+time1[key2][0].nome+'</span>';
@@ -160,7 +159,6 @@ function atualizarTela() {
   imgLink = 'https://battlerite.club/_Assets/images/avatar/' + time2[key2][0].idimg + '.png';
 
   perfil = headerRowCapitao + time2[key2][0].id + '">';
-  perfil += '<img class="img-icon" src="../imgs/capitao_icon.png">';
   perfil += '<img class="img-profile" src="' + imgLink + '"></img>';
   perfil += '<div class="profile-itens">';
   perfil += '<span class="item">'+time2[key2][0].nome+'</span>';

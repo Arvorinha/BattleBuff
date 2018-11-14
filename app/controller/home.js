@@ -10,7 +10,7 @@ module.exports.index = function(app, req, res) {
       delete req.session.img;
       res.redirect('/')
     } else {
-      console.log(req.session.sessaoAdmin + 'b');
+      //console.log(req.session.sessaoAdmin + 'b');
       res.render('index', {
         erros: "",
         session:req.session
