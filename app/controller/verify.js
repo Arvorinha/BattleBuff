@@ -32,7 +32,7 @@ module.exports.verify = function(app, req ,res){
         }
         if (result.rowCount) {
           req.session.sessaoAdmin = true;
-          console.log(req.session.sessaoAdmin + 'a');
+          //console.log(req.session.sessaoAdmin + 'a');
           res.redirect('/');
         }
         else{

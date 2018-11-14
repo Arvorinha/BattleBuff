@@ -4,6 +4,7 @@ html, body {
 }
 
 .min-100 {
+  height: auto;
   min-height: 100%;
 }
 
@@ -207,8 +208,9 @@ html, body {
   font-size: 15px;
   vertical-align: text-top;
   background-color: #181818;
-  min-height: 154;
   border: 1px solid #484848;
+  height: auto;
+  min-height: 154px;
 }
 
 .player-profile {
@@ -283,4 +285,8 @@ html, body {
   display: block;
   margin-left: 55px;
   line-height: normal;
+}
+
+.log-in {
+  margin: 10px;
 }
