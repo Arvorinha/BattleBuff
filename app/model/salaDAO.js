@@ -1,4 +1,4 @@
-function salaDAO(pool){
+function salaDAO(pool) {
   this._pool = pool;
 }
 
@@ -33,54 +33,54 @@ function salaDAO(pool){
 // se precisar de outro comando so falar
 
 
-salaDAO.prototype.insert = function (nome, callback) {
-  this._pool().connect((err,client,done) => {
+salaDAO.prototype.insert = function(nome, cb) {
+  this._pool().getConnection((err, connection) => {
     if (err) {
       throw err;
     }
-    client.query('INSERT INTO TB_SALA(NM_SALA) VALUES($1) RETURNING ID_SALA',[nome],callback);
+    connection.query('INSERT INTO TB_SALA(NM_SALA) VALUES(?) RETURNING ID_SALA', [nome], cb, connection.release());
   })
 }
 
-salaDAO.prototype.updateJogadoresByIdSala = function (id, jogadores, callback) {
-  this._pool().connect((err,client,done) => {
+salaDAO.prototype.updateJogadoresByIdSala = function(id, jogadores, cb) {
+  this._pool().getConnection((err, connection) => {
     if (err) {
       throw err;
     }
-    client.query('UPDATE TB_SALA SET QTD_JOGADORES = $1 WHERE ID_SALA = $2',[jogadores, id],callback);
+    connection.query('UPDATE TB_SALA SET QTD_JOGADORES = ? WHERE ID_SALA = ?', [jogadores, id], cb, connection.release());
   })
 }
 
-salaDAO.prototype.deleteSalaById = function (id, callback) {
-  this._pool().connect((err,client,done) => {
+salaDAO.prototype.deleteSalaById = function(id, cb) {
+  this._pool().getConnection((err, connection) => {
     if (err) {
       throw err;
     }
-    client.query('DELETE FROM TB_SALA WHERE ID_SALA = $1',[id],callback);
+    connection.query('DELETE FROM TB_SALA WHERE ID_SALA = ?', [id], cb, connection.release());
   })
 }
 
-salaDAO.prototype.findAll = function (callback) {
-  this._pool().connect((err,client,done) => {
+salaDAO.prototype.findAll = function(cb) {
+  this._pool().getConnection((err, connection) => {
     if (err) {
       throw err;
     }
     var query = "SELECT a.ID_SALA, a.NM_SALA , a.QTD_JOGADORES, b.NM_STATUS ";
     query += "FROM TB_SALA a ";
     query += "INNER JOIN TB_STATUS b ON a.ID_STATUS = b.ID_STATUS"
-    client.query(query,callback);
+    connection.query(query, cb, connection.release());
   })
 }
 
-salaDAO.prototype.findById = function (id, callback) {
-  this._pool().connect((err,client,done) => {
+salaDAO.prototype.findById = function(id, cb) {
+  this._pool().getConnection((err, connection) => {
     if (err) {
       throw err;
     }
-    client.query('SELECT * FROM TB_SALA WHERE ID_SALA = $1',[id],callback);
+    connection.query('SELECT * FROM TB_SALA WHERE ID_SALA = ?', [id], cb, connection.release());
   })
 }
 
-module.exports = function(){
+module.exports = function() {
   return salaDAO;
 }

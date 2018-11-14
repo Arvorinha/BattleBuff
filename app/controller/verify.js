@@ -7,30 +7,30 @@ module.exports.verify = function(app, req ,res){
   var steamID = req.user.steamid;
 
   var sessoes = function(){
-    steamDAO.findBySteam64(steamID,async function(err, result){
-      if (err) {
-        throw err;
+    steamDAO.findBySteam64(steamID,async function(error, results, fields){
+      if (error) {
+        throw error;
       }
       req.session.sessaoAutorizada = true;
-      req.session.id_jogador = result.rows[0].id_jogador;
-      var userid = result.rows[0].id_jogador;
-      req.session.steamid = result.rows[0].steam64;
-      req.session.btrid = result.rows[0].btrid;
+      req.session.id_jogador = results[0].ID_JOGADOR;
+      var userid = results[0].ID_JOGADOR;
+      req.session.steamid = results[0].STEAM64;
+      req.session.btrid = results[0].BTRID;
       req.session.verificarSessao = true;
-      keyDAO.findByIdJogador(req.session.id_jogador,function(err,result){
-        if (err) {
-          throw err;
+      keyDAO.findByIdJogador(req.session.id_jogador,function(error, results, fields){
+        if (error) {
+          throw error;
         }
-        if (result.rowCount) {
-          if (result.rows[0].id_jogador == req.session.id_jogador) {
+        if (results.length > 0) {
+          if (results[0].ID_JOGADOR == req.session.id_jogador) {
             req.session.autenticado = true;
           }
         }
-      adminDAO.findById(userid ,function(err,result){
-        if (err) {
-          throw err;
+      adminDAO.findById(userid ,function(error, results, fields){
+        if (error) {
+          throw error;
         }
-        if (result.rowCount) {
+        if (results.length > 0) {
           req.session.sessaoAdmin = true;
           //console.log(req.session.sessaoAdmin + 'a');
           res.redirect('/');
@@ -44,23 +44,23 @@ module.exports.verify = function(app, req ,res){
   }
 
 
-  steamDAO.findBySteam64(req.user.steamid, function(err, result){
-    if(err){
-      console.log(err.stack);
+  steamDAO.findBySteam64(req.user.steamid, function(error, results, fields){
+    if(error){
+      console.log(error.stack);
     }
     else {
       //Remove sessao criada pelo pacote steam-login
       delete req.session.steamUser;
       req.user = null;
       /*********************************************/
-      if (result.rowCount == 0) {
+      if (!results.length > 0) {
         battlerite().getPlayerBySteamId(steamID).then((response) => {
           var btrID = response.data[0].id;
           nick = response.data[0].attributes.name;
           img = response.data[0].attributes.stats.picture;
-          steamDAO.insert(steamID, btrID, function(err, result){
-            if (err) {
-              console.log(err);
+          steamDAO.insert(steamID, btrID, function(error, results, fields){
+            if (error) {
+              console.log(error);
             }
             req.session.nick = nick;
             req.session.img = img;
