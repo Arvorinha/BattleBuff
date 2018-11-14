@@ -1,5 +1,4 @@
 module.exports.index = function(app, req, res) {
-  console.log(req.session);
   if (req.session.verificarSessao) {
     if (typeof req.query.sair != "undefined" && req.query.sair == "sim") {
       console.log(req.query.sair);

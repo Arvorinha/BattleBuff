@@ -1,74 +1,149 @@
 module.exports.key =function(app, req ,res, paginaNome){
   var pool = app.config.dbConnection;
-  var keyDAO = new app.app.model.keyDAO(pool);
+  var KeyDAO = new app.app.model.KeyDAO(pool);
   var AdminDAO = new app.app.model.AdminDAO(pool);
   var battlerite = app.config.battlerite;
   var finalJson = [];
-  var keys = [];
-
-  keyDAO.findByUserNull(function(err,result){
-    if (err) {
-      return console.log(err);
-    }
-    console.log(result);
-    var findByUserNull = result;
-    keyDAO.findByUserNotNull(function(err,result){
-      if (err) {
-        return console.log(err);
-      }
-      console.log(result);
-      result.rows.forEach(function(data){
-        keys.push(data.btrid)
-      })
-      var startPage =async function(){
-        var pagina = req.query.pagina;
-        if (!pagina) {
-          pagina = 0;
+  var keys = {BTRID:[],TX_KEY:[]};
+  var maxItemsPerPage = 10;
+  var minItemsPerPage = 1;
+  var pagina = req.query.pagina;
+  if (!pagina) {
+    pagina = 1;
+  }
+  if(pagina > 1) {
+    minItemsPerPage = minItemsPerPage * maxItemsPerPage;
+  }
+  async function findAll() {
+    return new Promise((resolve,reject)=>{
+      KeyDAO.findAll((error,results,fields)=>{
+        if (error) {
+          throw error
         }
-        var maxItemsPerPage = 10;
-        var numPaginas = Math.ceil((findByUserNull.rowCount + result.rowCount) / maxItemsPerPage);
-        if (result.rowCount > 0) {
-          battlerite().getPlayersByIds(keys).then((response) => {
-            for (var i = 0; i < response.data.length; i++) {
-              finalJson.push({
-                tx_key: result.rows[i].tx_key,
-                btrid: result.rows[i].btrid,
-                nick: response.data[i].attributes.name
-              })
-            }
-            console.log(finalJson);
-            res.render('admin', {
+        resolve(results)
+      })
+    })
+  }
+
+  async function getKeys() {
+    return new Promise(function(resolve, reject) {
+      KeyDAO.getKeys(pagina,minItemsPerPage,maxItemsPerPage,function(error,results,fields){
+        if (error) {
+          throw error
+        }
+        // console.log(results[0][0].TB_KEY.BTRID);
+        resolve(results[0])
+      })
+    });
+  }
+  getKeys().then(function (results) {
+    if (results.length > 0) {
+      for (var i = 0; i < results.length; i++) {
+        keys.BTRID[i] = results[i].TB_KEY.BTRID;
+        keys.TX_KEY[i] = results[i].TB_KEY.TX_KEY;
+      }
+    }
+    return {keys:keys,results:results};
+  }).then(function (value) {
+    if (value.keys.BTRID.length > 0) {
+      battlerite().getPlayersByIds(value.keys.BTRID).then((response) => {
+        for (var i = 0; i < response.data.length; i++) {
+          finalJson.push({
+            TX_KEY: value.keys.TX_KEY[i],
+            BTRID: value.keys.BTRID[i],
+            NICK: response.data[i].attributes.name
+          })
+        }
+        for (var i = 0; i < value.results.length; i++) {
+          if(!value.results[i].TB_KEY.BTRID){
+            finalJson.push({
+              TX_KEY: value.results[i].TB_KEY.TX_KEY,
+              NICK: ''
+            })
+          }
+        }
+        return finalJson;
+      }).catch((error) => {
+        console.log(error);
+      }).then(function (value) {
+        findAll().then(function (findAll) {
+          var numPaginas = Math.ceil(findAll.length / maxItemsPerPage);
+          res.render('admin', {
               erros:"",
               session:req.session,
-              queryPaginacao: pagina,
-              maximoItem: maxItemsPerPage,
               numPaginas: numPaginas,
-              findByUserNull: findByUserNull,
-              findByUserNotNull: finalJson,
+              results:value,
               pagina:paginaNome,
               sucesso: ''
             });
-
-          }).catch((error) => {
-            console.log(error.response.status);
-          });
-          return;
+        })
+      });
+    }
+    else {
+      findAll().then(function (findAll) {
+        for (var i = 0; i < value.results.length; i++) {
+          if(!value.results[i].BTRID){
+            finalJson.push({
+              TX_KEY: value.results[i].TB_KEY.TX_KEY,
+              NICK: ''
+            })
+          }
         }
+        var numPaginas = Math.ceil(findAll.length / maxItemsPerPage);
         res.render('admin', {
-          erros:"",
-          session:req.session,
-          queryPaginacao: pagina,
-          maximoItem: maxItemsPerPage,
-          numPaginas: numPaginas,
-          findByUserNull: findByUserNull,
-          findByUserNotNull: '',
-          pagina:paginaNome,
-          sucesso: ''
-        });
-      }
-      startPage();
-    })
+            erros:"",
+            session:req.session,
+            numPaginas: numPaginas,
+            results:finalJson,
+            pagina:paginaNome,
+            sucesso: ''
+          });
+      })
+    }
   })
+  // KeyDAO.getKeys(function(error,results,fields){
+  //   if (error) {
+  //     throw error
+  //   }
+  //   // console.log(finalJson);
+  //   res.render('admin', {
+  //     erros:"",
+  //     session:req.session,
+  //     queryPaginacao: pagina,
+  //     maximoItem: maxItemsPerPage,
+  //     numPaginas: numPaginas,
+  //     findByUserNull: findByUserNull,
+  //     findByUserNotNull: finalJson,
+  //     pagina:paginaNome,
+  //     sucesso: ''
+  //   });
+  //   if (results.length > 0) {
+  //     for (var i = 0; i < results.length; i++) {
+  //       keys.push(results[i].BTRID)
+  //     }
+  //     console.log(keys.length);
+  //     if (keys.length > 0) {
+  //
+  //     }
+  //   }
+  // })
+  //       var numPaginas = Math.ceil((findByUserNull.rowCount + result.rowCount) / maxItemsPerPage);
+  //
+  //       res.render('admin', {
+  //         erros:"",
+  //         session:req.session,
+  //         queryPaginacao: pagina,
+  //         maximoItem: maxItemsPerPage,
+  //         numPaginas: numPaginas,
+  //         findByUserNull: findByUserNull,
+  //         findByUserNotNull: '',
+  //         pagina:paginaNome,
+  //         sucesso: ''
+  //       });
+  //     }
+  //     startPage();
+  //   })
+  // })
 }
 
 module.exports.postKey = function(app,req,res){
@@ -78,7 +153,7 @@ module.exports.postKey = function(app,req,res){
     var repetido = false;
     var quantidade = req.body.quantidade;
     var pool = app.config.dbConnection;
-    var keyDAO = new app.app.model.keyDAO(pool);
+    var KeyDAO = new app.app.model.KeyDAO(pool);
     /*Forçando Erro Pra teste*/
     // var teste = 3;
     var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -100,16 +175,16 @@ module.exports.postKey = function(app,req,res){
               if (key == finalKey[c]) {
                 console.log(key);
                 key = "";
-                console.log(key);
-                console.log("Caiu no for para verificar key iguais");
+                // console.log(key);
+                // console.log("Caiu no for para verificar key iguais");
                 repetido = true;
               }
             }
             if (repetido) {
-              console.log("caiu no if pra zerar o i");
-              console.log("Valor de I antes= "+i);
+              // console.log("caiu no if pra zerar o i");
+              // console.log("Valor de I antes= "+i);
               i = -1;
-              console.log("Valor de I depois = "+i);
+              // console.log("Valor de I depois = "+i);
               //qtdKey--;
               repetido = false;
             }
@@ -129,23 +204,28 @@ module.exports.postKey = function(app,req,res){
     }
 
     finalKey.forEach(function(data){
-      keyDAO.findByKey(data,function(err, result){
-        if(err){
-          console.log(err);
+      KeyDAO.findByKey(data,function(error,results,fields){
+        if(error){
+          console.log(error);
           return
         }
-        if (!result.rowCount) {
-          keyDAO.insert(data,function(err,result){
-            if(err){
-              console.log(err);
+        if (!results.rowCount) {
+          KeyDAO.insert(data,function(error,results,fields){
+            if(error){
+              console.log(error);
               return
             }
           })
         }
       })
     });
-
-    res.redirect('key');
+    KeyDAO.findAll(function(error,results,fields){
+      if(error){
+        console.log(error);
+        return
+      }
+      res.redirect('/admin/key');
+    });
 }
 
 // module.exports.validarKey =async function(app,req,res){
@@ -154,9 +234,9 @@ module.exports.postKey = function(app,req,res){
 //   console.log(keys.length);
 //   var pool = app.config.dbConnection;
 //   var validKey = [];
-//   var keyDAO = new app.app.model.keyDAO(pool);
+//   var KeyDAO = new app.app.model.KeyDAO(pool);
 //   for (var i = 1; i < keys.length; i++) {
-//       keyDAO.findByKey(keys[i],function(err, result){
+//       KeyDAO.findByKey(keys[i],function(err, result){
 //         if (err) {
 //           throw err;
 //         }

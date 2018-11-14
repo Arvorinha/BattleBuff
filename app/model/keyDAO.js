@@ -1,36 +1,55 @@
-function keyDAO(pool){
+function KeyDAO(pool){
   this._pool = pool;
 }
 
-keyDAO.prototype.findByKey = function (key,callback) {
-  this._pool().connect((err,client,done) => {
+KeyDAO.prototype.getKeys = function (pagina,min,max,cb) {
+	this._pool().getConnection(function (err,connection) {
+		if (err) {
+			throw err
+		}
+		var options = {sql: 'call get_key(?,?,?)', nestTables: true};
+		connection.query(options,[pagina,min,max],cb,connection.release())
+	})
+};
+
+KeyDAO.prototype.findAll = function (cb) {
+  this._pool().getConnection(function (err,connection) {
+    if (err) {
+      throw err;
+    }
+    connection.query('SELECT * FROM TB_KEY',cb,connection.release());
+  })
+};
+
+KeyDAO.prototype.findByKey = function (key,callback) {
+  this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
-    client.query('SELECT * FROM TB_KEY WHERE TX_KEY=$1',[key],callback,done());
+    connection.query('SELECT * FROM TB_KEY WHERE TX_KEY=?',[key],callback,connection.release());
   });
 }
 
-keyDAO.prototype.insert = function (key,callback) {
-  this._pool().connect((err,client,done) => {
+KeyDAO.prototype.insert = function (key,callback) {
+  this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
-    client.query('INSERT INTO TB_KEY(TX_KEY) VALUES($1)',[key],callback,done());
+    connection.query('INSERT INTO TB_KEY(TX_KEY) VALUES(?)',[key],callback,connection.release());
   })
 };
 
-keyDAO.prototype.findByUserNull = function (callback) {
-  this._pool().connect((err,client,done)=>{
+KeyDAO.prototype.findByUserNull = function (callback) {
+  this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
-    client.query('SELECT * FROM TB_KEY WHERE ID_JOGADOR IS NULL',callback,done());
+    connection.query('SELECT * FROM TB_KEY WHERE ID_JOGADOR IS NULL',callback,connection.release());
   })
 };
 
-keyDAO.prototype.findByUserNotNull = function (callback) {
-  this._pool().connect((err,client,done) => {
+KeyDAO.prototype.findByUserNotNull = function (callback) {
+  this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
@@ -38,29 +57,29 @@ keyDAO.prototype.findByUserNotNull = function (callback) {
     sql += "FROM TB_KEY a "
     sql += "INNER JOIN TB_JOGADOR b ON a.ID_JOGADOR = b.ID_JOGADOR ";
     sql += "WHERE a.ID_JOGADOR IS NOT NULL";
-    client.query(sql,callback,done());
+    connection.query(sql,callback,connection.release());
   })
 };
 
-keyDAO.prototype.registerKey = function (id_jogador,key,callback) {
-  this._pool().connect((err,client,done) => {
+KeyDAO.prototype.registerKey = function (id_jogador,key,callback) {
+  this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
-    client.query("UPDATE TB_KEY SET ID_JOGADOR = $1 WHERE TX_KEY=$2 AND ID_JOGADOR IS NULL",[id_jogador,key],callback,done());
+    connection.query("UPDATE TB_KEY SET ID_JOGADOR = ? WHERE TX_KEY=? AND ID_JOGADOR IS NULL",[id_jogador,key],callback,connection.release());
   })
 };
 
-keyDAO.prototype.findByIdJogador = function (id_jogador,callback) {
-  this._pool().connect((err,client,done) => {
+KeyDAO.prototype.findByIdJogador = function (id_jogador,callback) {
+  this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
-    client.query("SELECT ID_JOGADOR FROM TB_KEY WHERE ID_JOGADOR=$1 AND ID_JOGADOR IS NOT NULL",[id_jogador],callback,done());
+    connection.query("SELECT ID_JOGADOR FROM TB_KEY WHERE ID_JOGADOR=? AND ID_JOGADOR IS NOT NULL",[id_jogador],callback,connection.release());
   })
 
 };
 
 module.exports = function(){
-  return keyDAO;
+  return KeyDAO;
 }

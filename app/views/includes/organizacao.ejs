@@ -26,23 +26,25 @@
     </div>
   </div>
 </form>
-<%if(result.rowCount > 0){%>
-  <table>
-    <thead>
-      <tr>
-        <td>Foto</td>
-        <td>Nome</td>
-        <td>País</td>
-      </tr>
-    </thead>
-    <tbody>
-      <%for(var i=0; i < result.rowCount; i++){%>
+<div class="col-md-9">
+  <%if(results.length > 0){%>
+    <table>
+      <thead>
         <tr>
-            <td><img src="http://localhost:5000/<%= result.rows[i].ft_organizacao %>" alt="" width="10%" height="10%"></td>
-            <td><%= result.rows[i].nm_organizacao %></td>
-            <td><%= result.rows[i].pais_organizacao %></td>
+          <td>Foto</td>
+          <td>Nome</td>
+          <td>País</td>
         </tr>
+      </thead>
+      <tbody>
+        <%for(var i=0; i < results.length; i++){%>
+          <tr>
+            <td><img src="http://localhost:5000/<%= results[i].FT_ORGANIZACAO %>" alt="" width="10%" height="10%"></td>
+            <td><%= results[i].NM_ORGANIZACAO %></td>
+            <td><%= results[i].PAIS_ORGANIZACAO %></td>
+          </tr>
+          <%}%>
+        </tbody>
+      </table>
       <%}%>
-    </tbody>
-  </table>
-<%}%>
+</div>

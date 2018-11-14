@@ -26,17 +26,17 @@ module.exports.post = function(app,req,res) {
       sucesso: sucesso,
       erros:'',
       pagina: 'organizacao',
-      result: result
+      results: result
     })
   }
   function execGetAll() {
     return new Promise(function(resolve, reject) {
-      oDAO.findAll(function(err,result){
-        if (err) {
-          throw err;
+      oDAO.findAll(function(error,results,fields){
+        if (error) {
+          throw error;
         }
-        resolve(result)
-        console.log(result);
+        resolve(results)
+        console.log(results);
       })
     });
   }
@@ -56,7 +56,7 @@ module.exports.post = function(app,req,res) {
         erros: erros,
         sucesso:'',
         pagina: 'organizacao',
-        result:value
+        results:value
       })
     })
   }
@@ -89,9 +89,9 @@ module.exports.post = function(app,req,res) {
     if (value) {
       if (fs.existsSync('app/views/public/organizacoes/'+req.body.nome+'/')) {
         var caminho = 'organizacoes/'+req.body.nome+'/'+req.files.foto.name;
-        oDAO.insert(req.body.nome,caminho,req.body.pais,function(err,result) {
-          if (err) {
-            throw err;
+        oDAO.insert(req.body.nome,caminho,req.body.pais,function(error,results,fields) {
+          if (error) {
+            throw error;
           }
           execGetAll().then(function(value){
             renderSucesso('Órganízacaô incluida com sucesso',value);
