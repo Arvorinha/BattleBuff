@@ -3,11 +3,11 @@ function AdminDAO(pool){
 }
 
 AdminDAO.prototype.findById = function (id,callback) {
-  this._pool().connect((err,client,done) => {
+  this._pool().getConnection((err,connection) => {
     if (err) {
-      throw err;
+      return console.log(err);
     }
-    client.query('SELECT * FROM TB_ADMIN WHERE ID_JOGADOR = $1',[id],callback,done())
+    client.query('SELECT * FROM TB_ADMIN WHERE ID_JOGADOR = ?',[id],callback,done())
   })
 };
 

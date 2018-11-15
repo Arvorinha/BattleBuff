@@ -70,12 +70,12 @@ KeyDAO.prototype.registerKey = function (id_jogador,key,callback) {
   })
 };
 
-KeyDAO.prototype.findByIdJogador = function (id_jogador,callback) {
+KeyDAO.prototype.findByBtrid = function (btrid,callback) {
   this._pool().getConnection((err,connection) => {
     if (err) {
       return console.log(err);
     }
-    connection.query("SELECT ID_JOGADOR FROM TB_KEY WHERE ID_JOGADOR=? AND ID_JOGADOR IS NOT NULL",[id_jogador],callback,connection.release());
+    connection.query("SELECT BTRID FROM TB_KEY WHERE BTRID=? AND ID_JOGADOR IS NOT NULL",[btrid],callback,connection.release());
   })
 
 };

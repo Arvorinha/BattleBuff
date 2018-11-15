@@ -5,83 +5,126 @@ module.exports.verify = function(app, req ,res){
   var adminDAO = new app.app.model.AdminDAO(pool);
   var battlerite = app.config.battlerite;
   var steamID = req.user.steamid;
-
-  var sessoes = function(){
-    steamDAO.findBySteam64(steamID,async function(error, results, fields){
-      if (error) {
-        throw error;
-      }
-      req.session.sessaoAutorizada = true;
-      req.session.id_jogador = results[0].ID_JOGADOR;
-      var userid = results[0].ID_JOGADOR;
-      req.session.steamid = results[0].STEAM64;
-      req.session.btrid = results[0].BTRID;
-      req.session.verificarSessao = true;
-      keyDAO.findByIdJogador(req.session.id_jogador,function(error, results, fields){
+  async function findBySteam64() {
+    return new Promise(function(resolve, reject) {
+      steamDAO.findBySteam64(steamID,function (error,results,fields) {
         if (error) {
-          throw error;
+          throw error
         }
-        if (results.length > 0) {
-          if (results[0].ID_JOGADOR == req.session.id_jogador) {
-            req.session.autenticado = true;
-          }
-        }
-      adminDAO.findById(userid ,function(error, results, fields){
-        if (error) {
-          throw error;
-        }
-        if (results.length > 0) {
-          req.session.sessaoAdmin = true;
-          //console.log(req.session.sessaoAdmin + 'a');
-          res.redirect('/');
-        }
-        else{
-          res.redirect('/');
-        }
-      });
-    });
+        console.log(steamID);
+        resolve(results)
+      } )
     });
   }
 
-
-  steamDAO.findBySteam64(req.user.steamid, function(error, results, fields){
-    if(error){
-      console.log(error.stack);
+  findBySteam64().then(function (results) {
+    //Remove sessao criada pelo pacote steam-login
+    delete req.session.steamUser;
+    req.user = null;
+    /*********************************************/
+    if (!results.length) {
+      battlerite().getPlayerBySteamId(steamID).then((response) => {
+        var btrID = response.data[0].id;
+        nick = response.data[0].attributes.name;
+        img = response.data[0].attributes.stats.picture;
+        steamDAO.insert(steamID, btrID, function(error, results, fields){
+          if (error) {
+            console.log(error);
+          }
+          req.session.nick = nick;
+          req.session.img = img;
+        })
+      }).catch((error) => {
+        req.session.erros = error;
+        return res.redirect('/error')
+      }).then(function () {
+        findBySteam64().then(function (resultado) {
+          console.log(resultado);
+          console.log('caiu aqui kkk');
+        })
+      })
     }
-    else {
-      //Remove sessao criada pelo pacote steam-login
-      delete req.session.steamUser;
-      req.user = null;
-      /*********************************************/
-      if (!results.length > 0) {
-        battlerite().getPlayerBySteamId(steamID).then((response) => {
-          var btrID = response.data[0].id;
-          nick = response.data[0].attributes.name;
-          img = response.data[0].attributes.stats.picture;
-          steamDAO.insert(steamID, btrID, function(error, results, fields){
-            if (error) {
-              console.log(error);
-            }
-            req.session.nick = nick;
-            req.session.img = img;
-            sessoes();
-          })
-        }).catch((error) => {
-          req.session.erros = error.response.status;
-          return res.redirect('/error')
-        });
-      }else {
-        battlerite().getPlayerBySteamId(steamID).then((response) => {
-          req.session.nick = response.data[0].attributes.name;
-          req.session.img = response.data[0].attributes.stats.picture;
-          sessoes();
-        }).catch((error) => {
-            console.log(error.response.status);
-        });
-      }
-    }
-});/*
-setTimeout(function(){
-  res.redirect('/');
-},1500);*/
+  })
+//
+//   var sessoes = function(){
+//     steamDAO.findBySteam64(steamID,async function(error, results, fields){
+//       if (error) {
+//         throw error;
+//       }
+//       console.log(results[0].ID_JOGADOR);
+//       req.session.sessaoAutorizada = true;
+//       req.session.id_jogador = results[0].ID_JOGADOR;
+//       var userid = results[0].ID_JOGADOR;
+//       req.session.steamid = results[0].STEAM64;
+//       req.session.btrid = results[0].BTRID;
+//       req.session.verificarSessao = true;
+//       keyDAO.findByIdJogador(req.session.btrid,function(error, results, fields){
+//         if (error) {
+//           throw error;
+//         }
+//         if (results.length > 0) {
+//           if (results[0].BTRID == req.session.btrid) {
+//             req.session.autenticado = true;
+//           }
+//         }
+//       adminDAO.findById(userid ,function(error, results, fields){
+//         if (error) {
+//           throw error;
+//         }
+//         if (results.length > 0) {
+//           req.session.sessaoAdmin = true;
+//           //console.log(req.session.sessaoAdmin + 'a');
+//           res.redirect('/');
+//         }
+//         else{
+//           res.redirect('/');
+//         }
+//       });
+//     });
+//     });
+//   }
+//
+//
+//   steamDAO.findBySteam64(req.user.steamid, function(error, results, fields){
+//     if(error){
+//       console.log(error.stack);
+//     }
+//     else {
+//       console.log(results);
+//       //Remove sessao criada pelo pacote steam-login
+//       delete req.session.steamUser;
+//       req.user = null;
+//       /*********************************************/
+//       if (!results.length) {
+//         battlerite().getPlayerBySteamId(steamID).then((response) => {
+//           var btrID = response.data[0].id;
+//           nick = response.data[0].attributes.name;
+//           img = response.data[0].attributes.stats.picture;
+//           steamDAO.insert(steamID, btrID, function(error, results, fields){
+//             if (error) {
+//               console.log(error);
+//             }
+//             req.session.nick = nick;
+//             req.session.img = img;
+//             sessoes();
+//           })
+//         }).catch((error) => {
+//           req.session.erros = error;
+//           return res.redirect('/error')
+//         });
+//       }else {
+//         battlerite().getPlayerBySteamId(steamID).then((response) => {
+//           req.session.nick = response.data[0].attributes.name;
+//           req.session.img = response.data[0].attributes.stats.picture;
+//           sessoes();
+//         }).catch((error) => {
+//             console.log(error.response.status);
+//         });
+//       }
+//     }
+// });
+// setTimeout(function(){
+//   res.redirect('/');
+// },1500);
+//
 }
