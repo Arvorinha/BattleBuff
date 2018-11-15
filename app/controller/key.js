@@ -12,7 +12,8 @@ module.exports.key =function(app, req ,res, paginaNome){
     pagina = 1;
   }
   if(pagina > 1) {
-    minItemsPerPage = minItemsPerPage * maxItemsPerPage;
+    console.log('caiu aqui para minitems');
+    minItemsPerPage = maxItemsPerPage * (pagina - 1);
   }
   async function findAll() {
     return new Promise((resolve,reject)=>{
@@ -31,20 +32,24 @@ module.exports.key =function(app, req ,res, paginaNome){
         if (error) {
           throw error
         }
+        console.log(pagina,minItemsPerPage,maxItemsPerPage);
         // console.log(results[0][0].TB_KEY.BTRID);
         resolve(results[0])
       })
     });
   }
   getKeys().then(function (results) {
-    if (results.length > 0) {
+    if (results.length) {
       for (var i = 0; i < results.length; i++) {
-        keys.BTRID[i] = results[i].TB_KEY.BTRID;
+        if (results[i].TB_KEY.BTRID) {
+          keys.BTRID[i] = results[i].TB_KEY.BTRID;
+        }
         keys.TX_KEY[i] = results[i].TB_KEY.TX_KEY;
       }
     }
     return {keys:keys,results:results};
   }).then(function (value) {
+    console.log(value.keys.BTRID);
     if (value.keys.BTRID.length > 0) {
       battlerite().getPlayersByIds(value.keys.BTRID).then((response) => {
         for (var i = 0; i < response.data.length; i++) {
@@ -54,7 +59,7 @@ module.exports.key =function(app, req ,res, paginaNome){
             NICK: response.data[i].attributes.name
           })
         }
-        for (var i = 0; i < value.results.length; i++) {
+        for (var i = finalJson.length; i < value.results.length; i++) {
           if(!value.results[i].TB_KEY.BTRID){
             finalJson.push({
               TX_KEY: value.results[i].TB_KEY.TX_KEY,
@@ -85,10 +90,11 @@ module.exports.key =function(app, req ,res, paginaNome){
           if(!value.results[i].BTRID){
             finalJson.push({
               TX_KEY: value.results[i].TB_KEY.TX_KEY,
-              NICK: ''
+              NICK: null
             })
           }
         }
+        console.log(finalJson);
         var numPaginas = Math.ceil(findAll.length / maxItemsPerPage);
         res.render('admin', {
             erros:"",

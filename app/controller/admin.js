@@ -2,7 +2,8 @@ var fs = require('fs')
 var moment = require('moment')
 module.exports.admin = function(app,req,res){
   if (!req.session.sessaoAdmin) {
-    return res.redirect('/');
+    res.redirect('/');
+    return;
   }
   res.render('admin',{
     erros:'',
@@ -15,6 +16,7 @@ module.exports.admin = function(app,req,res){
 module.exports.pagina = function(app,req,res){
   if (!req.session.sessaoAdmin) {
     res.redirect('/');
+    return;
   }
   var connection = app.config.dbConnection;
   var sDAO = new app.app.model.SeasonDAO(connection);

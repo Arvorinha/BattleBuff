@@ -1,14 +1,19 @@
 module.exports.index = function(app, req, res) {
   if (req.session.verificarSessao) {
     if (typeof req.query.sair != "undefined" && req.query.sair == "sim") {
-      console.log(req.query.sair);
-      delete req.session.id;
-      delete req.session.steamid;
-      delete req.session.verificarSessao;
-      delete req.session.nick;
-      delete req.session.btrid;
-      delete req.session.img;
-      res.redirect('/')
+      req.session.destroy(function (err) {
+        if (err) {
+          console.log(err);
+        }
+        console.log('deletou a sessao kkk');
+        res.redirect('/')
+      })
+      // delete req.session.id;
+      // delete req.session.steamid;
+      // delete req.session.verificarSessao;
+      // delete req.session.nick;
+      // delete req.session.btrid;
+      // delete req.session.img;
     } else {
       //console.log(req.session.sessaoAdmin + 'b');
       res.render('index', {
