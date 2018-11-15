@@ -75,7 +75,7 @@ KeyDAO.prototype.findByBtrid = function (btrid,callback) {
     if (err) {
       return console.log(err);
     }
-    connection.query("SELECT BTRID FROM TB_KEY WHERE BTRID=? AND ID_JOGADOR IS NOT NULL",[btrid],callback,connection.release());
+    connection.query("SELECT BTRID FROM TB_KEY WHERE BTRID=? AND BTRID IS NOT NULL",[btrid],callback,connection.release());
   })
 
 };

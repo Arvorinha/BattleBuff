@@ -1,7 +1,7 @@
 module.exports.verify = function(app, req ,res){
   var pool = app.config.dbConnection;
   var steamDAO = new app.app.model.JogadorDAO(pool);
-  var keyDAO = new app.app.model.keyDAO(pool);
+  var keyDAO = new app.app.model.KeyDAO(pool);
   var adminDAO = new app.app.model.AdminDAO(pool);
   var battlerite = app.config.battlerite;
   var steamID = req.user.steamid;
@@ -11,7 +11,28 @@ module.exports.verify = function(app, req ,res){
         if (error) {
           throw error
         }
-        console.log(steamID);
+        resolve(results)
+      } )
+    });
+  }
+
+  async function findByBtrid() {
+    return new Promise(function(resolve, reject) {
+      keyDAO.findByBtrid(req.session.btrid,function(error, results, fields){
+        if (error) {
+          throw error;
+        }
+        resolve(results)
+      } )
+    });
+  }
+
+  async function findByIdAdmin(userid) {
+    return new Promise(function(resolve, reject) {
+      adminDAO.findById(userid ,function(error, results, fields){
+        if (error) {
+          throw error;
+        }
         resolve(results)
       } )
     });
@@ -23,6 +44,7 @@ module.exports.verify = function(app, req ,res){
     req.user = null;
     /*********************************************/
     if (!results.length) {
+      console.log('usuario nao registrado, efetuando cadastro');
       battlerite().getPlayerBySteamId(steamID).then((response) => {
         var btrID = response.data[0].id;
         nick = response.data[0].attributes.name;
@@ -33,16 +55,84 @@ module.exports.verify = function(app, req ,res){
           }
           req.session.nick = nick;
           req.session.img = img;
+          findBySteam64().then(function (resultado) {
+            if (resultado.length) {
+              req.session.sessaoAutorizada = true;
+              req.session.id_jogador = resultado[0].ID_JOGADOR;
+              var userid = resultado[0].ID_JOGADOR;
+              req.session.steamid = resultado[0].STEAM64;
+              req.session.btrid = resultado[0].BTRID;
+              req.session.verificarSessao = true;
+              return userid;
+            }
+          }).then(function (userid) {
+            findByBtrid().then(function (findByBtrid) {
+              console.log(findByBtrid);
+              if (findByBtrid.length) {
+                if (findByBtrid[0].BTRID == req.session.btrid) {
+                  req.session.autenticado = true;
+                }
+              }
+              return userid;
+            }).then(function (userid) {
+              findByIdAdmin(userid).then(function (findByIdAdmin) {
+                if (findByIdAdmin.length) {
+                  req.session.sessaoAdmin = true;
+                  //console.log(req.session.sessaoAdmin + 'a');
+                  res.redirect('/');
+                }
+                else{
+                  res.redirect('/');
+                }
+              })
+            })
+          })
         })
       }).catch((error) => {
         req.session.erros = error;
         return res.redirect('/error')
-      }).then(function () {
-        findBySteam64().then(function (resultado) {
-          console.log(resultado);
-          console.log('caiu aqui kkk');
-        })
       })
+    }
+    else {
+      console.log('ja registrado, efetuando login');
+      battlerite().getPlayerBySteamId(steamID).then((response) => {
+        nick = response.data[0].attributes.name;
+        img = response.data[0].attributes.stats.picture;
+        req.session.nick = nick;
+        req.session.img = img;
+        req.session.sessaoAutorizada = true;
+        req.session.id_jogador = results[0].ID_JOGADOR;
+        var userid = results[0].ID_JOGADOR;
+        req.session.steamid = results[0].STEAM64;
+        req.session.btrid = results[0].BTRID;
+        req.session.verificarSessao = true;
+        return userid;
+      }).catch((error) => {
+        console.log(error);
+        req.session.erros = error;
+        return res.redirect('/error')
+      }).then(function (userid) {
+        findByBtrid().then(function (findByBtrid) {
+          console.log(findByBtrid);
+          if (findByBtrid.length) {
+            if (findByBtrid[0].BTRID == req.session.btrid) {
+              req.session.autenticado = true;
+            }
+          }
+          return userid;
+        }).then(function (userid) {
+          findByIdAdmin(userid).then(function (findByIdAdmin) {
+            if (findByIdAdmin.length) {
+              req.session.sessaoAdmin = true;
+              //console.log(req.session.sessaoAdmin + 'a');
+              res.redirect('/');
+            }
+            else{
+              res.redirect('/');
+            }
+          })
+        })
+      });
     }
   })
 //

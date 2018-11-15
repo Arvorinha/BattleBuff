@@ -7,7 +7,7 @@ AdminDAO.prototype.findById = function (id,callback) {
     if (err) {
       return console.log(err);
     }
-    client.query('SELECT * FROM TB_ADMIN WHERE ID_JOGADOR = ?',[id],callback,done())
+    connection.query('SELECT * FROM TB_ADMIN WHERE ID_JOGADOR = ?',[id],callback,connection.release())
   })
 };
 

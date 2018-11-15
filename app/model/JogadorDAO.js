@@ -18,7 +18,7 @@ JogadorDAO.prototype.findBySteam64 = function(id,cb){
       console.log(err);
       return
     }
-    connection.query('SELECT * FROM TB_JOGADOR WHERE STEAM64= ?',[id], cb, connection.release());
+    connection.query('SELECT * FROM TB_JOGADOR WHERE STEAM64=?',[id], cb, connection.release());
   });
 }
 
