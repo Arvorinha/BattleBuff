@@ -63,6 +63,13 @@ module.exports.verify = function (app, req, res) {
         var btrID = response.data[0].id;
         nick = response.data[0].attributes.name;
         img = response.data[0].attributes.stats.picture;
+        titleid = response.data[0].attributes.stats.title;
+        var titles = require('./../utils/Titles.json');
+        for (var i in titles.Titles) {
+          if (titles.Titles[i].StackableID == titleid) {
+            req.session.title = titles.Titles[i].Text;
+          }
+        }
         steamDAO.insert(steamID, btrID, function (error, results, fields) {
           if (error) {
             console.log(error);
@@ -135,7 +142,7 @@ module.exports.verify = function (app, req, res) {
         nick = response.data[0].attributes.name;
         img = response.data[0].attributes.stats.picture;
         titleid = response.data[0].attributes.stats.title;
-        var titles = require('./test.json');
+        var titles = require('./../utils/Titles.json');
         for (var i in titles.Titles) {
           if (titles.Titles[i].StackableID == titleid) {
             req.session.title = titles.Titles[i].Text;
