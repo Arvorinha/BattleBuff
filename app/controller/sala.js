@@ -35,9 +35,9 @@ module.exports.salaID = function(importIO, app) {
       //atualizar a contagem de jogadores na partida
       io.to(room).emit('room users', numClients);
       //atualizar a contagem de jogadores no banco
-      salaDAO.updateJogadoresByIdSala(room, numClients, function(err, result) {
-        if (err) {
-          console.log(err);
+      salaDAO.updateJogadoresByIdSala(room, numClients, function(error, results, fields) {
+        if (error) {
+          console.log(error);
           return
         } else
           console.log('sala atualizada ao um usuario entrar');
@@ -105,9 +105,9 @@ module.exports.salaID = function(importIO, app) {
       if (io.sockets.adapter.rooms[room] === undefined) {
         numClients = 0;
         //deletar sala no banco se n tiver jogadores
-        salaDAO.deleteSalaById(room, function(err, result) {
-          if (err) {
-            console.log(err);
+        salaDAO.deleteSalaById(room, function(error, results, fields) {
+          if (error) {
+            console.log(error);
             return
           } else
             console.log('sala deletada ao um usuario sair');
@@ -116,9 +116,9 @@ module.exports.salaID = function(importIO, app) {
         clients = io.sockets.adapter.rooms[room].sockets;
         numClients = Object.keys(clients).length;
         //atualizar a contagem de jogadores no banco
-        salaDAO.updateJogadoresByIdSala(room, numClients, function(err, result) {
-          if (err) {
-            console.log(err);
+        salaDAO.updateJogadoresByIdSala(room, numClients, function(error, results, fields) {
+          if (error) {
+            console.log(error);
             return
           } else
             console.log('sala atualizada ao um usuario sair');
@@ -140,12 +140,12 @@ module.exports.sala = function(app, req, res) {
       var pool = app.config.dbConnection;
       var salaDAO = new app.app.model.salaDAO(pool);
 
-      salaDAO.findAll(async function(err, result) {
-        if (err)
-          throw err;
+      salaDAO.findAll(async function(error, results, fields) {
+        if (error)
+          throw error;
         else {
           res.render('sala', {
-            results: result.rows,
+            results: results,
             sala: req.params.sala,
             session: req.session
           });
@@ -164,13 +164,13 @@ module.exports.entrarSala = function(app, req, res) {
   //     var pool = app.config.dbConnection;
   //     var salaDAO = new app.app.model.salaDAO(pool);
   //     console.log(req.params.sala);
-  //     salaDAO.findById(req.params.sala, function(err,result){
-  //       if(err){
-  //         console.log(err);
+  //     salaDAO.findById(req.params.sala, function(error, results, fields){
+  //       if(error){
+  //         console.log(error);
   //         return
   //       }
   //       else {
-  //         if(result.rows.length >= 1){
+  //         if(results.length >= 1){
   //           res.render('checksala', {
   //             sala : req.params.sala,
   //             session:req.session
@@ -229,12 +229,12 @@ module.exports.criarSala = function(app, req, res) {
   var pool = app.config.dbConnection;
   var salaDAO = new app.app.model.salaDAO(pool);
 
-  salaDAO.insert(nome, function(err, result) {
-    if (err) {
-      console.log(err);
+  salaDAO.insert(nome, function(error, results, fields) {
+    if (error) {
+      console.log(error);
       return
     } else {
-      var salaID = result.rows[0].id_sala;
+      var salaID = results.insertId;
       res.redirect('/sala/' + salaID);
     }
   });

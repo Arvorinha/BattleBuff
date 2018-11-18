@@ -38,10 +38,9 @@ salaDAO.prototype.insert = function(nome, cb) {
     if (err) {
       throw err;
     }
-    connection.query('INSERT INTO TB_SALA(NM_SALA) VALUES(?) RETURNING ID_SALA', [nome], cb, connection.release());
+    connection.query('INSERT INTO TB_SALA(NM_SALA, DT_PARTIDA, ID_STATUS) VALUES(?, NOW(), 1)', [nome], cb, connection.release());
   })
 }
-
 salaDAO.prototype.updateJogadoresByIdSala = function(id, jogadores, cb) {
   this._pool().getConnection((err, connection) => {
     if (err) {

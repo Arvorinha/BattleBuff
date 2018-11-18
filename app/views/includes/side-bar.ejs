@@ -6,7 +6,7 @@
       <div></div>
     </div>
     <div class="sidebar-brand">
-      <a href="#">BATTLEBUFF</a>
+      <a href="/">BATTLEBUFF</a>
     </div>
     <div class="sidebar-header">
       <%if(session.autenticado){%>
@@ -16,9 +16,9 @@
       <div class="user-info">
         <span class="user-name"><a href="#">
             <%= session.nick%></a></span>
-        <span class="user-role">Hero of BoulderPass</span>
+        <span class="user-role"><%= session.title%></span>
         <span class="user-status">
-          <span>Diamond League</span>
+          <span><%= session.league%></span>
         </span>
       </div>
       <%} else{%>
@@ -36,7 +36,7 @@
     </div>
     <%if(!session.autenticado){%>
     <div class="sidebar-search">
-      <center><a href="./auth"><img class="log-in" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png"></a></center>
+      <center><a href="/auth"><img class="log-in" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png"></a></center>
     </div>
     <%}%>
     <!-- sidebar-search  -->

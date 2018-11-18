@@ -8,7 +8,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.app.controller.sala.salaID(io, app);
 
-http.listen(port, function(){
+http.listen(port, function() {
   console.log(`Servidor Rodando na porta ${ port }`);
 });
 // app.listen(port, () => console.log(`Servidor Rodando na porta ${ port }`));

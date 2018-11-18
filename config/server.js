@@ -37,6 +37,7 @@ consign()
   .then('config/dbConnection.js')
   .then('app/model')
   .then('app/controller')
+  .then('app/utils')
   .then('config/battlerite.js')
   .into(app);
 

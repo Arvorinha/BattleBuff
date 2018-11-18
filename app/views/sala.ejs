@@ -32,14 +32,14 @@
             <% for (var i = 0; i < results.length; i++) { %>
             <tr>
               <th scope="row">
-                <%= results[i].nm_sala %>
+                <%= results[i].NM_SALA %>
               </th>
               <td class="text-success">
-                <%= results[i].qtd_jogadores %>/6</td>
+                <%= results[i].QTD_JOGADORES %>/6</td>
               <td class="text-success">
-                <%= results[i].nm_status %>
+                <%= results[i].NM_STATUS %>
               </td>
-              <td><a href="/sala/<%= results[i].id_sala %>" class="btn btn-outline-success form-control">Entrar</a></td>
+              <td><a href="/sala/<%= results[i].ID_SALA %>" class="btn btn-outline-success form-control">Entrar</a></td>
             </tr>
             <% } %>
           </tbody>

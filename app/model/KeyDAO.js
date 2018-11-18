@@ -27,8 +27,8 @@ KeyDAO.prototype.findByKey = function (key,callback) {
       return console.log(err);
     }
     connection.query('SELECT * FROM TB_KEY WHERE TX_KEY=?',[key],callback,connection.release());
-  });
-}
+  })
+};
 
 KeyDAO.prototype.insert = function (key,callback) {
   this._pool().getConnection((err,connection) => {

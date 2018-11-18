@@ -3,7 +3,7 @@ function RankDAO(pool){
 }
 
 RankDAO.prototype.insert = function (cb) {
-	this._pool().connect((err,client,done)=>{
+	this._pool().getConnection((err,client,done)=>{
 		if (err) {
 			throw err
 		}
@@ -11,7 +11,7 @@ RankDAO.prototype.insert = function (cb) {
 		query += 'SELECT a.MMR_JOGADOR, b.ID_SEASON, a.ID_JOGADOR ';
 		query += 'FROM TB_JOGADOR a, TB_SEASON b '
 		query += 'WHERE b.DT_FIM IS NULL '
-		client.query(query,cb,done());
+		client.query(query,cb,connection.release())
 	})
 };
 

@@ -53,6 +53,16 @@ SeasonDAO.prototype.updateDtFim = function(cb){
 	})
 }
 
+SeasonDAO.prototype.lastSeasonId = function(cb){
+	this._pool().getConnection((err,connection)=>{
+		if (err) {
+			throw err;
+		}
+		var query = 'SELECT ID_SEASON FROM TB_SEASON ORDER BY ID_SEASON DESC LIMIT 1';
+		connection.query(query,cb,connection.release());
+	})
+}
+
 module.exports = function(){
 	return SeasonDAO;
 }
