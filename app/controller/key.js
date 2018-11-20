@@ -5,8 +5,13 @@ module.exports.key =function(app, req ,res, paginaNome){
   var battlerite = app.config.battlerite;
   var finalJson = [];
   var keys = {BTRID:[],TX_KEY:[]};
+  // var keysNotNull = [];
   var maxItemsPerPage = 10;
   var minItemsPerPage = 1;
+  var numPaginas = 0;
+  if (!req.query.filterKey) {
+    req.query.filterKey = 'TUDO'
+  }
   var pagina = req.query.pagina;
   if (!pagina) {
     pagina = 1;
@@ -26,18 +31,54 @@ module.exports.key =function(app, req ,res, paginaNome){
     })
   }
 
-  async function getKeys() {
-    return new Promise(function(resolve, reject) {
-      KeyDAO.getKeys(pagina,minItemsPerPage,maxItemsPerPage,function(error,results,fields){
+  async function findByUserNotNull() {
+    return new Promise((resolve,reject)=>{
+      KeyDAO.findByUserNotNull((error,results,fields)=>{
         if (error) {
           throw error
         }
-        console.log(pagina,minItemsPerPage,maxItemsPerPage);
+        resolve(results)
+      })
+    })
+  }
+
+  async function findByUserNull() {
+    return new Promise((resolve,reject)=>{
+      KeyDAO.findByUserNull((error,results,fields)=>{
+        if (error) {
+          throw error
+        }
+        resolve(results)
+      })
+    })
+  }
+
+  async function getKeys() {
+    return new Promise(function(resolve, reject) {
+      KeyDAO.getKeys(pagina,minItemsPerPage,maxItemsPerPage,req.query.filterKey,function(error,results,fields){
+        if (error) {
+          throw error
+        }
         // console.log(results[0][0].TB_KEY.BTRID);
         resolve(results[0])
       })
     });
   }
+
+  if (req.query.filterKey == 'NAONULO') {
+    findByUserNotNull().then(function (findByUserNotNull) {
+      numPaginas = Math.ceil(findByUserNotNull.length / maxItemsPerPage);
+    })
+  }else if (req.query.filterKey == 'NULO') {
+    findByUserNull().then(function (findByUserNull) {
+      numPaginas = Math.ceil(findByUserNull.length / maxItemsPerPage);
+    })
+  }else if (req.query.filterKey == 'TUDO') {
+    findAll().then(function (findAll) {
+      numPaginas = Math.ceil(findAll.length / maxItemsPerPage);
+    })
+  }
+
   getKeys().then(function (results) {
     if (results.length) {
       for (var i = 0; i < results.length; i++) {
@@ -47,11 +88,18 @@ module.exports.key =function(app, req ,res, paginaNome){
         keys.TX_KEY[i] = results[i].TB_KEY.TX_KEY;
       }
     }
+    // console.log(keys);
     return {keys:keys,results:results};
   }).then(function (value) {
-    console.log(value.keys.BTRID);
     if (value.keys.BTRID.length > 0) {
+      // for (var i = 0; i < value.keys.BTRID.length; i++) {
+      //   if (value.keys.BTRID[i]) {
+      //     keysNotNull.push(value.keys.BTRID[i]);
+      //   }
+      // }
+      // console.log(keysNotNull);
       battlerite().getPlayersByIds(value.keys.BTRID).then((response) => {
+
         for (var i = 0; i < response.data.length; i++) {
           finalJson.push({
             TX_KEY: value.keys.TX_KEY[i],
@@ -59,6 +107,7 @@ module.exports.key =function(app, req ,res, paginaNome){
             NICK: response.data[i].attributes.name
           })
         }
+
         for (var i = finalJson.length; i < value.results.length; i++) {
           if(!value.results[i].TB_KEY.BTRID){
             finalJson.push({
@@ -71,40 +120,41 @@ module.exports.key =function(app, req ,res, paginaNome){
       }).catch((error) => {
         console.log(error);
       }).then(function (value) {
-        findAll().then(function (findAll) {
-          var numPaginas = Math.ceil(findAll.length / maxItemsPerPage);
+        setTimeout(function(){
           res.render('admin', {
               erros:"",
               session:req.session,
               numPaginas: numPaginas,
               results:value,
               pagina:paginaNome,
-              sucesso: ''
+              sucesso: '',
+              filtro: req.query.filterKey,
+              pageAtual:pagina
             });
-        })
+        }, 500);
       });
     }
     else {
-      findAll().then(function (findAll) {
-        for (var i = 0; i < value.results.length; i++) {
-          if(!value.results[i].BTRID){
-            finalJson.push({
-              TX_KEY: value.results[i].TB_KEY.TX_KEY,
-              NICK: null
-            })
-          }
+      for (var i = 0; i < value.results.length; i++) {
+        if(!value.results[i].BTRID){
+          finalJson.push({
+            TX_KEY: value.results[i].TB_KEY.TX_KEY,
+            NICK: null
+          })
         }
-        console.log(finalJson);
-        var numPaginas = Math.ceil(findAll.length / maxItemsPerPage);
+      }
+      setTimeout(function () {
         res.render('admin', {
             erros:"",
             session:req.session,
             numPaginas: numPaginas,
             results:finalJson,
             pagina:paginaNome,
-            sucesso: ''
-          });
-      })
+            sucesso: '',
+            filtro: req.query.filterKey,
+            pageAtual: Number(pagina)
+        });
+      },500)
     }
   })
   // KeyDAO.getKeys(function(error,results,fields){

@@ -6,21 +6,49 @@
   <title></title>
 </head>
 
+<style media="screen">
+  .bordinha{
+    border-bottom: 3px solid red;
+  }
+  .nav-pills > li > a {
+    border-radius: 0px;
+  }
+
+  .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8,
+  .col-md-9, .col-md-10, .col-md-11, .col-md-12, .pagination>li>a, .pagination>li>span{
+    position: unset;
+  }
+</style>
+
 <body>
   <div class="page-wrapper chiller-theme toggled">
     <%include includes/side-bar%>
     <main class="page-content">
       <div class="container-fluid min-100">
-        <div class="row">
-          <div class="col-md-3">
-            <ul>
-              <li><a href="/admin/season">Season</a></li>
-              <li><a href="/admin/organizacao">Organizacao</a></li>
-              <li><a href="/admin/key">key</a></li>
-            </ul>
-          </div>
+        <div class="indice" id="indice-menu-top-admin">
+          <ul class="nav nav-pills nav-justified" id="menu-top-admin">
+            <li>
+              <a href="/admin/season" class="<%- pagina == 'season' ? 'bordinha' : '' %>">
+                <i class="fa fa-bookmark"></i>
+                <span>Season</span>
+              </a>
+            </li>
+            <li>
+              <a href="/admin/organizacao" class="<%- pagina == 'organizacao' ? 'bordinha' : '' %>">
+                <i class="fa fa-building"></i>
+                <span>Organizacao</span>
+              </a>
+            </li>
+            <li>
+              <a href="/admin/key" style="margin-bottom:20px" class="<%- pagina == 'key' ? 'bordinha' : '' %>">
+                <i class="fa fa-key"></i>
+                <span>Key</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-        <div class="col-md-9">
+        <div class="col-md-12">
           <%if(erros){%>
           <div class="alert alert-danger">
             <strong>Atenção!!</strong>
@@ -51,11 +79,46 @@
           <%- pagina == 'inexistente' ? '<h2>Página inexistente</h2>' : '' %>
         </div>
         </div>
-        </div>
       <% include includes/footer.ejs %>
     </main>
 
   </div>
+  <script type="text/javascript">
+    function changeIndice(x) {
+      if (x.matches) {
+        document.getElementById('indice-menu-top-admin').appendChild(document.getElementById('menu-top-admin'));
+        document.getElementById("dashboard-side-menu").style.display = "inline-block";
+
+        for(var i = 0; i < document.getElementsByClassName("indice").length;i++){
+        	document.getElementsByClassName("indice")[i].style.display = "block";
+        }
+
+        for (var i = 0; i < document.getElementsByClassName("nenhuma-menu").length; i++) {
+          document.getElementsByClassName("nenhuma-menu")[i].className = "nav nav-pills nav-justified";
+        }
+
+        for (var i = 0; i < document.getElementsByClassName("nenhuma-bordinha").length; i++) {
+          document.getElementsByClassName("nenhuma-bordinha")[i].className = "bordinha";
+        }
+
+      }else {
+        for(var i = 0; i < document.getElementsByClassName("indice").length;i++){
+        	document.getElementsByClassName("indice")[i].style.display = "none";
+        }
+        document.getElementById('indices-side-bar-menu').appendChild(document.getElementById('menu-top-admin'));
+        for (var i = 0; i < document.getElementsByClassName("nav-pills").length; i++) {
+          document.getElementsByClassName("nav-pills")[i].className = "nenhuma-menu";
+        }
+        for (var i = 0; i < document.getElementsByClassName("bordinha").length; i++) {
+          document.getElementsByClassName("bordinha")[i].className = "nenhuma-bordinha";
+        }
+        document.getElementById("dashboard-side-menu").style.display = "none"
+      }
+    }
+    var x = window.matchMedia("(min-width: 767px)");
+    changeIndice(x);
+    x.addListener(changeIndice);
+  </script>
 </body>
 
 </html>

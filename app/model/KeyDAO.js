@@ -2,13 +2,13 @@ function KeyDAO(pool){
   this._pool = pool;
 }
 
-KeyDAO.prototype.getKeys = function (pagina,min,max,cb) {
+KeyDAO.prototype.getKeys = function (pagina,min,max,param,cb) {
 	this._pool().getConnection(function (err,connection) {
 		if (err) {
 			throw err
 		}
-		var options = {sql: 'call get_key(?,?,?)', nestTables: true};
-		connection.query(options,[pagina,min,max],cb,connection.release())
+		var options = {sql: "call get_key(?,?,?,?)", nestTables: true};
+		connection.query(options,[pagina,min,max,param],cb,connection.release())
 	})
 };
 
@@ -44,7 +44,7 @@ KeyDAO.prototype.findByUserNull = function (callback) {
     if (err) {
       return console.log(err);
     }
-    connection.query('SELECT * FROM TB_KEY WHERE ID_JOGADOR IS NULL',callback,connection.release());
+    connection.query('SELECT * FROM TB_KEY WHERE BTRID IS NULL',callback,connection.release());
   })
 };
 
@@ -53,11 +53,11 @@ KeyDAO.prototype.findByUserNotNull = function (callback) {
     if (err) {
       return console.log(err);
     }
-    var sql = "SELECT a.TX_KEY, b.BTRID ";
-    sql += "FROM TB_KEY a "
-    sql += "INNER JOIN TB_JOGADOR b ON a.ID_JOGADOR = b.ID_JOGADOR ";
-    sql += "WHERE a.ID_JOGADOR IS NOT NULL";
-    connection.query(sql,callback,connection.release());
+    // var sql = "SELECT a.TX_KEY, b.BTRID ";
+    // sql += "FROM TB_KEY a "
+    // sql += "INNER JOIN TB_JOGADOR b ON a.ID_JOGADOR = b.ID_JOGADOR ";
+    // sql += "WHERE a.BTRID IS NOT NULL";
+    connection.query('SELECT * FROM TB_KEY WHERE BTRID IS NOT NULL',callback,connection.release());
   })
 };
 

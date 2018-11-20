@@ -20,16 +20,32 @@ module.exports.pagina = function(app,req,res){
   }
   var connection = app.config.dbConnection;
   var sDAO = new app.app.model.SeasonDAO(connection);
-  var oDAO = new app.app.model.OrganizacaoDAO(connection)
-  async function render(pagina,results) {
-    console.log(results);
+  var oDAO = new app.app.model.OrganizacaoDAO(connection);
+  var minPagina = 0;
+  if (req.query.pagina == 1 || !req.query.pagina) {
+    var paginaAtual = 1;
+  }else {
+    paginaAtual = req.query.pagina
+  }
+  if (paginaAtual>1) {
+    if (req.params.pagina == 'season') {
+      var minPagina = 10*(paginaAtual-1);
+    }
+    if (req.params.pagina == 'organizacao') {
+      var minPagina = 5*(paginaAtual-1);
+    }
+  }
+
+  async function render(pagina,numPagina,results) {
     res.render('admin',{
       erros:'',
       sucesso: '',
       pagina:pagina,
       session: req.session,
       results: results,
-      moment:moment
+      moment:moment,
+      numPagina: numPagina,
+      pageAtual:Number(paginaAtual)
     })
   }
 
@@ -40,7 +56,20 @@ module.exports.pagina = function(app,req,res){
       sucesso: '',
       session:req.session,
       result: '',
-      moment:moment
+      moment:moment,
+      numPagina: 1,
+      pageAtual:Number(paginaAtual)
+    })
+  }
+
+  async function findByPaginacaoOrganizacao() {
+    return new Promise(function(resolve,reject){
+      oDAO.findByPaginacao(minPagina,function (error,results,fields) {
+        if (error) {
+          throw error;
+        }
+        resolve(results);
+      })
     })
   }
 
@@ -61,22 +90,38 @@ module.exports.pagina = function(app,req,res){
         if (error) {
           throw error;
         }
-        console.log(results);
         resolve(results);
       })
     });
   }
 
+  async function findByPaginacaoSeason() {
+    return new Promise(function (resolve,reject) {
+      sDAO.findByPaginacao(minPagina,function (error,results,fields) {
+        if (error) {
+          throw error;
+        }
+        resolve(results);
+      })
+    })
+  }
+
   switch (req.params.pagina) {
     case 'season':
         getAllSeason().then(function (value) {
-          console.log(value);
-          render(req.params.pagina,value);
+          var numPagina = Math.ceil(value.length/10)
+          findByPaginacaoSeason().then(function (value) {
+            render(req.params.pagina,numPagina,value);
+          })
         })
       break;
     case 'organizacao':
         getAllOrganizacao().then(function (value) {
-          render(req.params.pagina,value);
+          var numPagina = Math.ceil(value.length/5)
+          console.log(numPagina);
+          findByPaginacaoOrganizacao().then(function(value){
+            render(req.params.pagina,numPagina,value);
+          })
         });
       break;
     case 'key':app.app.controller.key.key(app,req,res,req.params.pagina);
@@ -104,6 +149,27 @@ module.exports.alterarRanking = function (app,req,res){
 	var rDAO = new app.app.model.RankDAO(pool);
   var jDAO = new app.app.model.JogadorDAO(pool);
 	var seasonNova = req.body.season;
+  var minPagina = 0;
+  var numPagina = 0;
+  if (req.query.pagina == 1 || !req.query.pagina) {
+    var paginaAtual = 1;
+  }else {
+    paginaAtual = req.query.pagina
+  }
+  if (paginaAtual>1) {
+    var minPagina = 5*(paginaAtual-1);
+  }
+
+  async function findByPaginacaoSeason() {
+    return new Promise(function (resolve,reject) {
+      sDAO.findByPaginacao(minPagina,function (error,results,fields) {
+        if (error) {
+          throw error;
+        }
+        resolve(results);
+      })
+    })
+  }
 
   function getAllSeason() {
     return new Promise((resolve,reject)=>{
@@ -116,19 +182,25 @@ module.exports.alterarRanking = function (app,req,res){
     })
   }
 
+  getAllSeason().then(function (value) {
+    numPagina = Math.ceil(value.length/10);
+  })
+
 	var erros = req.validationErrors();
 	var dadosForm = {
 		form:req.body
 	}
 	if(erros){
-    return getAllSeason().then(function (value) {
+    return findByPaginacaoSeason().then(function (value) {
       res.render('admin',{
         session:req.session,
         erros:erros,
         sucesso: '',
         pagina: 'season',
         results:value,
-        moment:moment
+        moment:moment,
+        numPagina: numPagina,
+        pageAtual:Number(paginaAtual)
       });
     })
 	}
@@ -143,7 +215,9 @@ module.exports.alterarRanking = function (app,req,res){
 			sucesso: '',
       pagina : 'season',
       results:results,
-      moment:moment
+      moment:moment,
+      numPagina: numPagina,
+      pageAtual:Number(paginaAtual)
 		});
 	}
 
@@ -154,7 +228,9 @@ module.exports.alterarRanking = function (app,req,res){
 			sucesso: [{msg:sucesso}],
       pagina: 'season',
       results:results,
-      moment:moment
+      moment:moment,
+      numPagina: numPagina,
+      pageAtual:Number(paginaAtual)
 		});
 	}
 
@@ -172,7 +248,7 @@ module.exports.alterarRanking = function (app,req,res){
         throw error
       }
       // console.log(results[0][0].TB_SEASON);
-      return getAllSeason().then(function (value) {
+      return findByPaginacaoSeason().then(function (value) {
         renderSucesso('Nova season registrada com sucesso',value);
       })
     })

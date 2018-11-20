@@ -12,6 +12,15 @@ SeasonDAO.prototype.gerarRankingProcedure = function (nm_season,cb) {
 	})
 };
 
+SeasonDAO.prototype.findByPaginacao = function (min,cb) {
+	this._pool().getConnection(function (err,connection) {
+		if (err) {
+			throw err;
+		}
+		connection.query("SELECT * FROM TB_SEASON LIMIT ?,10",[min],cb,connection.release())
+	})
+};
+
 SeasonDAO.prototype.findBySeason = function(nm_season, cb) {
 	this._pool().getConnection(function (err,connection) {
 		if (err) {

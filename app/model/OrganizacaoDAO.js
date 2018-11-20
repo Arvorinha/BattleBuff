@@ -7,7 +7,16 @@ OrganizacaoDAO.prototype.findAll = function (cb) {
     if (err) {
       throw err;
     }
-    connection.query('SELECT * FROM TB_KEY',cb,connection.release());
+    connection.query('SELECT * FROM TB_ORGANIZACAO',cb,connection.release());
+  })
+};
+
+OrganizacaoDAO.prototype.findByPaginacao = function (min,cb) {
+  this._pool().getConnection(function(err,connection){
+    if (err) {
+      throw err;
+    }
+    connection.query("SELECT * FROM TB_ORGANIZACAO LIMIT ?,5",[min],cb,connection.release());
   })
 };
 

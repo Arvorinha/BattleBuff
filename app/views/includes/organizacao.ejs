@@ -1,4 +1,3 @@
-<strong><legend>Incluir organizacao</legend></strong>
 <form class="" action="/postOrganizacao" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <div class="col-md-9">
@@ -22,29 +21,46 @@
   </div>
   <div class="form-group">
     <div class="col-md-9">
-      <input type="submit" name="enviar" value="Enviar" class="btn btn-primary">
+      <input type="submit" name="enviar" value="Enviar" class="btn btn-primary" style="margin-top:10px;margin-bottom:10px">
     </div>
   </div>
 </form>
-<div class="col-md-9">
+<div class="col-md-12">
   <%if(results.length > 0){%>
-    <table>
-      <thead>
-        <tr>
-          <td>Foto</td>
-          <td>Nome</td>
-          <td>País</td>
-        </tr>
-      </thead>
-      <tbody>
-        <%for(var i=0; i < results.length; i++){%>
+    <div class="table-responsive">
+      <table class="table responsive-table">
+        <thead>
           <tr>
-            <td><img src="http://localhost:5000/<%= results[i].FT_ORGANIZACAO %>" alt="" width="10%" height="10%"></td>
-            <td><%= results[i].NM_ORGANIZACAO %></td>
-            <td><%= results[i].PAIS_ORGANIZACAO %></td>
+            <td>Foto</td>
+            <td>Nome</td>
+            <td>País</td>
           </tr>
+        </thead>
+        <tbody>
+          <%for(var i=0; i < results.length; i++){%>
+            <tr>
+              <td><img src="/<%= results[i].FT_ORGANIZACAO %>" class="img-thumbnail" alt="" width="70px" height="70px"></td>
+              <td><%= results[i].NM_ORGANIZACAO %></td>
+              <td><%= results[i].PAIS_ORGANIZACAO %></td>
+            </tr>
+            <%}%>
+          </tbody>
+        </table>
+    </div>
+  <%}%>
+  <% if(numPagina > 0) {%>
+    <nav aria-label="pagination example">
+      <ul class="pagination justify-content-end">
+        <li class="page-item">
+          <a class="page-link bg-light" href="/admin/organizacao?pagina=<%= pageAtual-1 > 0 ? pageAtual-1 : pageAtual %>">Previous</a>
+        </li>
+        <% for(var i = 1; i <= numPagina; i++) {%>
+          <li class="page-item"><a class="page-link bg-light" href="/admin/organizacao?pagina=<%= i %>"><%= i %></a></li>
           <%}%>
-        </tbody>
-      </table>
-      <%}%>
+          <li class="page-item">
+            <a class="page-link bg-light" href="/admin/organizacao?pagina=<%= pageAtual+1 <= numPagina ? pageAtual+1 : pageAtual %>">Next</a>
+          </li>
+        </ul>
+      </nav>
+  <%}%>
 </div>

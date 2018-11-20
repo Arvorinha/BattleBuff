@@ -1,3 +1,4 @@
+
       <form class="" method="post" action="/postKey">
           <select class="form-control" name="quantidade" style="float:left;width:15%">
             <option value="0">Selecione</option>
@@ -9,34 +10,47 @@
           </select>
        <button type="submit" name="btnGerarKey" class="btn btn-primary" style="margin-left:2%;margin-top:0.1%;margin-bottom:10px">GerarKey</button>
      </form>
-       <table class="table">
-      <thead>
-        <tr class="table-light">
-        </tr>
-        <tr class="table-light">
-          <th scope="col">Key</th>
-          <th scope="col">Dono</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for (var i = 0; i < results.length; i++) {%>
-          <tr>
-            <td><%= results[i].TX_KEY %></td>
-            <td><%= results[i].NICK %></td>
-          </tr>
-        <%} %>
-      </tbody>
-    </table>
-    <nav aria-label="pagination example">
-      <ul class="pagination justify-content-end">
-          <li class="page-item disabled">
-              <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
+     <% if(results.length) {%>
+       <form class="" method="get">
+         <h4>Filtro:</h4>
+         <input type="radio" name="filterKey" value="NAONULO"> Key usada
+         <input type="radio" name="filterKey" value="NULO"> Key não usada
+         <input type="radio" name="filterKey" value="TUDO" style="margin-bottom:20px"> Tudo
+         <button type="submit" style="color:#000">Filtrar</button>
+       </form>
+       <div class="table-responsive">
+         <table class="table">
+           <thead>
+             <tr class="table-light">
+             </tr>
+             <tr class="table-light">
+               <th scope="col">Key</th>
+               <th scope="col">Dono</th>
+             </tr>
+           </thead>
+           <tbody>
+             <% for (var i = 0; i < results.length; i++) {%>
+               <tr>
+                 <td><%= results[i].TX_KEY %></td>
+                 <td><%= results[i].NICK %></td>
+               </tr>
+               <%} %>
+             </tbody>
+           </table>
+       </div>
+    <%}%>
+    <%if(numPaginas > 0){%>
+      <nav aria-label="pagination example">
+        <ul class="pagination justify-content-end">
+          <li class="page-item">
+            <a class="page-link bg-light" href="/admin/key?filterKey=<%= filtro %>&pagina=<%= pageAtual-1 > 0 ? pageAtual-1 : pageAtual %>" tabindex="-1">Previous</a>
           </li>
           <% for(var i=1;i <= numPaginas;i++) {%>
-            <li class="page-item"><a class="page-link bg-light" href="?pagina=<%= i %>"><%= i %></a></li>
-          <%}%>
-          <li class="page-item">
-              <a class="page-link bg-light" href="#">Next</a>
-          </li>
-      </ul>
-  </nav>
+            <li class="page-item"><a class="page-link bg-light" href="/admin/key?filterKey=<%= filtro %>&pagina=<%= i %>"><%= i %></a></li>
+            <%}%>
+            <li class="page-item">
+              <a class="page-link bg-light" href="/admin/key?filterKey=<%= filtro %>&pagina=<%= pageAtual+1 <= numPaginas ? pageAtual+1 : pageAtual %>">Next</a>
+            </li>
+          </ul>
+        </nav>
+    <%}%>
