@@ -2,6 +2,15 @@ function JogadorDAO(pool){
   this._pool = pool;
 }
 
+JogadorDAO.prototype.findByRank = function (min,cb) {
+  this._pool().getConnection(function (err,connection) {
+    if (err) {
+      throw err;
+    }
+    connection.query('SELECT * FROM TB_JOGADOR ORDER BY MMR_JOGADOR DESC LIMIT ?,7',[min],cb,connection.release());
+  })
+};
+
 JogadorDAO.prototype.findAll = function(cb){
   this._pool().getConnection((err, connection) => {
     if(err){

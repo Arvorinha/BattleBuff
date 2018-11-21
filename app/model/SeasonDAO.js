@@ -30,6 +30,18 @@ SeasonDAO.prototype.findBySeason = function(nm_season, cb) {
 	})
 };
 
+SeasonDAO.prototype.findByRankNotNull = function (cb) {
+	this._pool().getConnection(function (err,connection) {
+		if (err) {
+			throw err;
+		}
+		var sql = "SELECT * FROM TB_SEASON ";
+		sql += "WHERE ID_SEASON in ( SELECT ID_SEASON FROM TB_RANK ";
+		sql += "WHERE ID_SEASON IS NOT NULL) "
+		connection.query(sql,cb,connection.release());
+	})
+}
+
 SeasonDAO.prototype.insert = function (nm_season, cb) {
   this._pool().getConnection((err,connection)=>{
     if (err) {

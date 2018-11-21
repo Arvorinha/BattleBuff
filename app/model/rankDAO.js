@@ -2,18 +2,23 @@ function RankDAO(pool){
 	this._pool = pool;
 }
 
-RankDAO.prototype.insert = function (cb) {
-	this._pool().getConnection((err,client,done)=>{
+RankDAO.prototype.findRankByPageAndSeason = function(id_season,min,cb){
+	this._pool().getConnection(function (err,connection) {
 		if (err) {
 			throw err
 		}
-		var query = 'INSERT INTO TB_RANK(MMR_RANK,ID_SEASON,ID_JOGADOR) ';
-		query += 'SELECT a.MMR_JOGADOR, b.ID_SEASON, a.ID_JOGADOR ';
-		query += 'FROM TB_JOGADOR a, TB_SEASON b '
-		query += 'WHERE b.DT_FIM IS NULL '
-		client.query(query,cb,connection.release())
+		connection.query('SELECT * FROM TB_RANK WHERE ID_SEASON =? LIMIT ?,7',[id_season,min],cb,connection.release());
 	})
-};
+}
+
+RankDAO.prototype.findAllRankBySeason = function(min,cb){
+	this._pool().getConnection(function (err,connection) {
+		if (err) {
+			throw err
+		}
+		connection.query('SELECT * FROM TB_RANK WHERE ID_SEASON =?',[id_season],cb,connection.release());
+	})
+}
 
 module.exports = function(){
 	return RankDAO;

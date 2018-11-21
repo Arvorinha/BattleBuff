@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <%include includes/header%>
+    <title></title>
+  </head>
+  <style media="screen">
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8,
+    .col-md-9, .col-md-10, .col-md-11, .col-md-12, .pagination>li>a, .pagination>li>span{
+      position: unset;
+    }
+  </style>
+  <body>
+    <div class="page-wrapper chiller-theme toggled">
+      <%include includes/side-bar%>
+      <main class="page-content">
+        <div class="container-fluid min-100" style="margin-top:-10px">
+            <div class="col-md-3">
+              <label for="sel1">Season:</label>
+              <select class="form-control" style="margin-bottom:10px">
+                <option>Atual</option>
+                <% if(listaSeasons) {%>
+                  <% for(var i = 0; i < listaSeasons.length;i++) {%>
+                    <option value="<%=listaSeasons[i].ID_SEASON%>"><%= listaSeasons[i].NM_SEASON %></option>
+                  <%}%>
+                <%}%>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Foto</th>
+                      <th>Nick</th>
+                      <th>MMR</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bodyTabelaRank">
+                  </tbody>
+                </table>
+              </div>
+              <nav aria-label="Page navigation example" style="margin-top:-15px;margin-bottom:-40px;">
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                  <li class="page-item"><a class="page-link" href="#" id="paginacao">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#" id="paginacao">21</a></li>
+                  <li class="page-item"><a class="page-link" href="#" id="paginacao">31</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+              </nav>
+            </div>
+        </div>
+        <% include includes/footer.ejs %>
+      </main>
+    </div>
+    <script type="text/javascript">
+    function startPage() {
+      $("#bodyTabelaRank").html("<div class=\"col-md-12 col-md-offset-7\"><div class=\"align-items-center justify-content-center\"><img src='/imgs/loading.gif'></div></div>");
+      $.ajax({
+        type:"GET",
+        url:"/rank",
+        data:{season:0,primeiro:true}
+      })
+      .done(function (rank) {
+        gerarTabela(rank);
+      })
+    }
+
+    function gerarTabela(rank) {
+      // var tabela;
+      // for (var i = 0; i < rank.length; i++) {
+      //   tabela += "<tr> ";
+      //     tabela += "<td>"+(Number(i)+1)+"</td> ";
+      //     tabela += "<td><img src=\"https://battlerite.club/_Assets/images/avatar/"+rank[i].FOTO+".png\" alt=\"\" width=\"50px\" height=\"50px\"></td> "
+      //     tabela += "<td>"+rank[i].NICK+"</td> ";
+      //     tabela += "<td>"+rank[i].MMR+"</td> ";
+      //   tabela +="</tr> ";
+      // }
+      // $("#bodyTabelaRank").html(tabela);
+    }
+      $(document).ready(function () {
+        startPage();
+        $('select').change(function () {
+          $("#bodyTabelaRank").html("<div class=\"col-md-12 col-md-offset-7\"><div class=\"align-items-center justify-content-center\"><img src='/imgs/loading.gif'></div></div>");
+          $.ajax({
+            type:"GET",
+            url:"/rank",
+            data:{season:$(this).val()}
+          })
+          .done(function (rank) {
+            gerarTabela(rank);
+          })
+        })
+        $('a#paginacao').click(function () {
+          console.log($(this).html());
+          $.ajax({
+            type:"GET",
+            url:"/rank",
+            data:{
+              pagina:$(this).html(),
+              season:$('select').val()
+            }
+          })
+        })
+      })
+    </script>
+  </body>
+</html>

@@ -105,6 +105,7 @@ module.exports.verify = function (app, req, res) {
                   battlerite().getTeamsByPlayerId(req.session.btrid, seasonID).then((response) => {
                     var ligaID = response.data[0].attributes.stats.league;
                     var leagueName = seasonUtils.getLeagueName(ligaID);
+                    console.log('liga name: '+leagueName);
                     req.session.league = leagueName;
                     if (findByIdAdmin.length) {
                       req.session.sessaoAdmin = true;

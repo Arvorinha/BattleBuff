@@ -247,6 +247,7 @@ module.exports.alterarRanking = function (app,req,res){
       if (error) {
         throw error
       }
+      console.log(results);
       // console.log(results[0][0].TB_SEASON);
       return findByPaginacaoSeason().then(function (value) {
         renderSucesso('Nova season registrada com sucesso',value);
