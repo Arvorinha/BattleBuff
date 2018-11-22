@@ -121,7 +121,7 @@ module.exports.key =function(app, req ,res, paginaNome){
         console.log(error);
       }).then(function (value) {
         setTimeout(function(){
-          res.render('admin', {
+            res.render('admin', {
               erros:"",
               session:req.session,
               numPaginas: numPaginas,
@@ -131,7 +131,7 @@ module.exports.key =function(app, req ,res, paginaNome){
               filtro: req.query.filterKey,
               pageAtual:pagina
             });
-        }, 500);
+        }, 700);
       });
     }
     else {
@@ -144,7 +144,7 @@ module.exports.key =function(app, req ,res, paginaNome){
         }
       }
       setTimeout(function () {
-        res.render('admin', {
+          res.render('admin', {
             erros:"",
             session:req.session,
             numPaginas: numPaginas,
@@ -153,8 +153,8 @@ module.exports.key =function(app, req ,res, paginaNome){
             sucesso: '',
             filtro: req.query.filterKey,
             pageAtual: Number(pagina)
-        });
-      },500)
+          });
+      },700)
     }
   })
   // KeyDAO.getKeys(function(error,results,fields){

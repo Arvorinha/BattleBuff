@@ -19,7 +19,7 @@
             <div class="col-md-3">
               <label for="sel1">Season:</label>
               <select class="form-control" style="margin-bottom:10px">
-                <option>Atual</option>
+                <option value="0">Atual</option>
                 <% if(listaSeasons) {%>
                   <% for(var i = 0; i < listaSeasons.length;i++) {%>
                     <option value="<%=listaSeasons[i].ID_SEASON%>"><%= listaSeasons[i].NM_SEASON %></option>
@@ -44,11 +44,6 @@
               </div>
               <nav aria-label="Page navigation example" style="margin-top:-15px;margin-bottom:-40px;">
                 <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                  <li class="page-item"><a class="page-link" href="#" id="paginacao">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#" id="paginacao">21</a></li>
-                  <li class="page-item"><a class="page-link" href="#" id="paginacao">31</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
                 </ul>
               </nav>
             </div>
@@ -57,55 +52,90 @@
       </main>
     </div>
     <script type="text/javascript">
-    function startPage() {
+    function gifLoading() {
       $("#bodyTabelaRank").html("<div class=\"col-md-12 col-md-offset-7\"><div class=\"align-items-center justify-content-center\"><img src='/imgs/loading.gif'></div></div>");
+    }
+    function getAtual() {
+      gifLoading();
       $.ajax({
         type:"GET",
         url:"/rank",
-        data:{season:0,primeiro:true}
+        data:{season:0}
       })
       .done(function (rank) {
         gerarTabela(rank);
       })
     }
 
-    function gerarTabela(rank) {
-      // var tabela;
-      // for (var i = 0; i < rank.length; i++) {
-      //   tabela += "<tr> ";
-      //     tabela += "<td>"+(Number(i)+1)+"</td> ";
-      //     tabela += "<td><img src=\"https://battlerite.club/_Assets/images/avatar/"+rank[i].FOTO+".png\" alt=\"\" width=\"50px\" height=\"50px\"></td> "
-      //     tabela += "<td>"+rank[i].NICK+"</td> ";
-      //     tabela += "<td>"+rank[i].MMR+"</td> ";
-      //   tabela +="</tr> ";
-      // }
-      // $("#bodyTabelaRank").html(tabela);
-    }
-      $(document).ready(function () {
-        startPage();
-        $('select').change(function () {
-          $("#bodyTabelaRank").html("<div class=\"col-md-12 col-md-offset-7\"><div class=\"align-items-center justify-content-center\"><img src='/imgs/loading.gif'></div></div>");
-          $.ajax({
-            type:"GET",
-            url:"/rank",
-            data:{season:$(this).val()}
-          })
-          .done(function (rank) {
-            gerarTabela(rank);
-          })
+    function getAntigos() {
+      $('select').change(function () {
+        gifLoading();
+        $.ajax({
+          type:"GET",
+          url:"/rank",
+          data:{season:$(this).val()}
         })
-        $('a#paginacao').click(function () {
-          console.log($(this).html());
-          $.ajax({
-            type:"GET",
-            url:"/rank",
-            data:{
-              pagina:$(this).html(),
-              season:$('select').val()
-            }
-          })
+        .done(function (rank) {
+          gerarTabela(rank);
         })
       })
+    }
+
+    function gerarTabela(rank) {
+      console.log('caiu aqui para gerar tabela');
+      if (rank.rank) {
+        var tabela;
+        for (var i = 0; i < rank.rank.length; i++) {
+          tabela += "<tr> ";
+          tabela += "<td>"+(Number(i)+1)+"</td> ";
+          tabela += "<td><img src=\"https://battlerite.club/_Assets/images/avatar/"+rank.rank[i].FOTO+".png\" alt=\"\" width=\"50px\" height=\"50px\"></td> "
+          tabela += "<td>"+rank.rank[i].NICK+"</td> ";
+          tabela += "<td>"+rank.rank[i].MMR+"</td> ";
+          tabela +="</tr> ";
+        }
+        $("#bodyTabelaRank").html(tabela);
+      }
+      else {
+        $("#bodyTabelaRank").html("<h1>Página inexistente</h1>");
+      }
+      gerarPaginacao(rank);
+    }
+
+    function gerarPaginacao(rank) {
+      if (rank.paginas) {
+        var paginacao = "<li class=\"page-item\"><a class=\"page-link\" href=\"#\">Previous</a></li> ";
+        for (var i = 0; i < rank.paginas; i++) {
+          paginacao += "<li class=\"page-item\"> ";
+          paginacao += "<a class=\"page-link\" href=\"#\" id=\"paginacao\">"+ Number(i+1) +"</a> ";
+          paginacao += "</li> ";
+        }
+        paginacao += "<li class=\"page-item\"><a class=\"page-link\" href=\"#\">Next</a></li>"
+        $("ul.pagination").html(paginacao);
+      }
+      getByPage();
+    }
+
+    function getByPage() {
+      $('#paginacao').click(function () {
+        gifLoading();
+        console.log($(this).html());
+        $.ajax({
+          type:"GET",
+          url:"/rank",
+          data:{
+            pagina:$(this).html(),
+            season:$('select').val()
+          }
+        })
+        .done(function (rank) {
+          gerarTabela(rank)
+        })
+      })
+    }
+    $(document).ready(function () {
+      getAtual();
+      getAntigos();
+    })
     </script>
   </body>
 </html>

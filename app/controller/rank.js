@@ -15,12 +15,12 @@ module.exports.rank = function (app,req,res) {
     min = 0;
   }
   if (pagina > 1) {
-    min = pagina*min
+    min = (pagina - 1)*7//7 porque é o maximo por pagina
   }
 
-  console.log(req.body);
+  console.log(req.query);
 
-  if (req.body.primeiro) {
+  if (!season) {
     console.log('caiu aqui');
     getSeasonRankNotNull().then(function (lista) {
       console.log(req.query);
@@ -31,7 +31,7 @@ module.exports.rank = function (app,req,res) {
     })
   }
   if (season == 0) {
-    getSeasonAtual(min).then(function (results) {
+    getSeasonAtualByPage(min).then(function (results) {
       // console.log(results);
       let tempMmr = [];
       let tempKeys = []
@@ -60,14 +60,18 @@ module.exports.rank = function (app,req,res) {
           }
           return rank;
         }).catch((error) => {
-          console.log(error);
+          // console.log(error);
         }).then(function (rank) {
-          res.send(rank);
+          console.log('caiu aqui');
+          findAllJogadores().then(function (allJogadores) {
+            var paginas = (Math.ceil(allJogadores.length/7));//7 porque é o maximo por pagina
+            res.send({rank:rank,paginas:paginas})
+          })
         })
     })
   }
   else {
-    getAtualSeason(season,min).then(function (results) {
+    getRankBySeason(season,min).then(function (results) {
       let tempMmr = [];
       let tempKeys = []
       for (var i = 0; i < results.length; i++) {
@@ -77,6 +81,7 @@ module.exports.rank = function (app,req,res) {
       keys.push({keys:tempKeys,mmr:tempMmr})
       return {keys:keys,results:results};
     }).then(function (data) {
+      console.log(data.keys);
       battlerite().getPlayersByIds(data.keys[0].keys).then((response) => {
         for (var i = 0; i < response.data.length; i++) {
           for (var ikeys = 0; ikeys < keys[0].keys.length; ikeys++) {
@@ -93,10 +98,12 @@ module.exports.rank = function (app,req,res) {
         }
         return rank;
       }).catch((error) => {
-        console.log(error);
+        // console.log(error);
       }).then(function (rank) {
-        console.log(rank);
-        res.send(rank)
+        getAllBySeason(season).then(function (allJogadores) {
+          var paginas = (Math.ceil(allJogadores.length/7));//7 porque é o maximo por pagina
+          res.send({rank:rank,paginas:paginas})
+        })
       })
     })
   }
@@ -113,7 +120,7 @@ module.exports.rank = function (app,req,res) {
   }
 
 //Pegar o rank limitando pela paginação de uma season especifica
-  async function getAtualSeason(id_season,min) {
+  async function getRankBySeason(id_season,min) {
     return new Promise(function (resolve,reject) {
       rDAO.findRankByPageAndSeason(id_season,min,function (error,results,fields) {
         if (error) {
@@ -125,9 +132,9 @@ module.exports.rank = function (app,req,res) {
   }
 
 //Pega o total de rank de uma season especifica
-  async function getAllBySeason() {
+  async function getAllBySeason(id_season) {
     return new Promise(function (resolve,reject) {
-      rDAO.findAllRankBySeason(min,function (error,results,fields) {
+      rDAO.findAllRankBySeason(id_season,function (error,results,fields) {
         if (error) {
           throw error;
         }
@@ -137,13 +144,25 @@ module.exports.rank = function (app,req,res) {
   }
 
 //Pega o rank da season atual
-  async function getSeasonAtual() {
+  async function getSeasonAtualByPage() {
     return new Promise(function (resolve,reject) {
       jDAO.findByRank(min,function (error,results,fields) {
         if (error) {
           throw error
         }
         resolve(results)
+      })
+    })
+  }
+
+//Pegar os jogadores
+  async function findAllJogadores() {
+    return new Promise(function (resolve,reject) {
+      jDAO.findAll(function (error,results,fields) {
+        if (error) {
+          throw error
+        }
+        resolve(results);
       })
     })
   }

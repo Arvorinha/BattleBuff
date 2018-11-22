@@ -7,11 +7,11 @@ RankDAO.prototype.findRankByPageAndSeason = function(id_season,min,cb){
 		if (err) {
 			throw err
 		}
-		connection.query('SELECT * FROM TB_RANK WHERE ID_SEASON =? LIMIT ?,7',[id_season,min],cb,connection.release());
+		connection.query('SELECT * FROM TB_RANK WHERE ID_SEASON = ? ORDER BY MMR_RANKING DESC LIMIT ?,7',[id_season,min],cb,connection.release());
 	})
 }
 
-RankDAO.prototype.findAllRankBySeason = function(min,cb){
+RankDAO.prototype.findAllRankBySeason = function(id_season,cb){
 	this._pool().getConnection(function (err,connection) {
 		if (err) {
 			throw err
