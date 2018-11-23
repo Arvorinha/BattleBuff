@@ -48,14 +48,18 @@ module.exports.post = function(app,req,res) {
     var sucesso = [
       {msg:msg}
     ]
-    res.render('admin',{
-      session:req.session,
-      sucesso: sucesso,
-      erros:'',
-      pagina: 'organizacao',
-      results: result,
-      numPagina: numPage,
-      pageAtual: paginaAtual
+    execGetAll().then(function(value){
+      numPage = Math.ceil(value.length/5);
+    }).then(function () {
+      res.render('admin',{
+        session:req.session,
+        sucesso: sucesso,
+        erros:'',
+        pagina: 'organizacao',
+        results: result,
+        numPagina: numPage,
+        pageAtual: paginaAtual
+      })
     })
   }
 

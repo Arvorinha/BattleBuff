@@ -222,16 +222,20 @@ module.exports.alterarRanking = function (app,req,res){
 	}
 
 	function renderSucesso(sucesso,results) {
-		res.render('admin',{
-			session:req.session,
-			erros: '',
-			sucesso: [{msg:sucesso}],
-      pagina: 'season',
-      results:results,
-      moment:moment,
-      numPagina: numPagina,
-      pageAtual:Number(paginaAtual)
-		});
+    getAllSeason().then(function (value) {
+      numPagina = Math.ceil(value.length/10);
+    }).then(function () {
+      res.render('admin',{
+        session:req.session,
+        erros: '',
+        sucesso: [{msg:sucesso}],
+        pagina: 'season',
+        results:results,
+        moment:moment,
+        numPagina: numPagina,
+        pageAtual:Number(paginaAtual)
+      });
+    })
 	}
 
 	sDAO.findBySeason(seasonNova,function(err,result){
