@@ -2,37 +2,6 @@ function salaDAO(pool) {
   this._pool = pool;
 }
 
-// criando sala:
-// apenas o nome porque o resto ja tem um default no banco
-// INSERT INTO TB_SALA(NM_SALA) VALUES(NOME);
-//
-// atualizando quantidade de jogadores
-// UPDATE TB_SALA(QTD_JOGADORES) VALUES(QTD_JOGADORES)
-// WHERE ID_SALA = ID_SALA
-// me informa depois se vc vai querer deixar o default da quantidade do jogador=0 ou =1
-//
-// atualizando o status:
-// UPDATE TB_SALA(ID_STATUS) VALUES(ID_STATUS)
-// 1=AGUARDANDO
-// 2=EM JOGO
-// 3=FINALIZADO
-// se deseja modificar os status so me falar
-//
-// tabela pick onde todos jogadores da sala ficaram:
-// INSERT INTO TB_PICK(ID_SALA,ID_JOGADOR) VALUES(ID_SALA,ID_JOGADOR);
-//
-// para mais de um insert:
-// INSERT INTO TB_PICK(ID_SALA,ID_JOGADOR)
-//             VALUES(ID_SALA,ID_JOGADOR),
-//                   (ID_SALA,ID_JOGADOR);
-//
-// deletando sala e os pick:
-// DELETE FROM TB_SALA WHERE ID_SALA = ID_SALA
-// DELETE FROM TB_PICK WHERE ID_SALA = ID_SALA
-//
-// se precisar de outro comando so falar
-
-
 salaDAO.prototype.insert = function(nome, cb) {
   this._pool().getConnection((err, connection) => {
     if (err) {
@@ -41,12 +10,22 @@ salaDAO.prototype.insert = function(nome, cb) {
     connection.query('INSERT INTO TB_SALA(NM_SALA, DT_PARTIDA, ID_STATUS) VALUES(?, NOW(), 1)', [nome], cb, connection.release());
   })
 }
+
 salaDAO.prototype.updateJogadoresByIdSala = function(id, jogadores, cb) {
   this._pool().getConnection((err, connection) => {
     if (err) {
       throw err;
     }
     connection.query('UPDATE TB_SALA SET QTD_JOGADORES = ? WHERE ID_SALA = ?', [jogadores, id], cb, connection.release());
+  })
+}
+
+salaDAO.prototype.updateStatusByIdSala = function(id, idstatus, cb) {
+  this._pool().getConnection((err, connection) => {
+    if (err) {
+      throw err;
+    }
+    connection.query('UPDATE TB_SALA SET ID_STATUS = ? WHERE ID_SALA = ?', [idstatus, id], cb, connection.release());
   })
 }
 
@@ -76,7 +55,7 @@ salaDAO.prototype.findById = function(id, cb) {
     if (err) {
       throw err;
     }
-    connection.query('SELECT * FROM TB_SALA WHERE ID_SALA = ?', [id], cb, connection.release());
+    connection.query('SELECT * FROM TB_SALA WHERE ID_SALA = ? AND ID_STATUS = 1', [id], cb, connection.release());
   })
 }
 

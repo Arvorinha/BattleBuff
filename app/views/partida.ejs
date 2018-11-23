@@ -8,7 +8,7 @@
   <title>Partida</title>
 </head>
 
-<body onload="credencial(1,'BalacoBakko',39244,6);">
+<body onload="credencial(Math.floor(Math.random() * 10000000000000000),'<%= session.nick%>',<%= session.img%>, Math.floor(Math.random() * 10000));">
   <div class="page-wrapper chiller-theme toggled">
     <% include includes/side-bar.ejs %>
     <main class="page-content">
@@ -29,9 +29,20 @@
             </div>
             <div class="players" id="time2">
             </div>
+            <div class="resultado" style="display: none;">
+              <span>Reportar resultado:</span><br>
+                <div class="caixa">
+                  <button type="button" class="btn btn-success">Partida terminada</button>
+                </div>
+                <div class="caixa">
+                  <button type="button" class="btn btn-danger">Partida Cancelada</button>
+                </div>
+            </div>
           </div>
         </div>
         Pessoas na sala: <span id="nPessoas">0</span>
+        <input type="button" onclick="atualizarTela()" value="atualiza">
+        <span id="turno" class="false"></span>
       </div>
       <% include includes/footer.ejs %>
     </main>

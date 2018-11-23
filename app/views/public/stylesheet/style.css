@@ -264,6 +264,7 @@ html, body {
 
 .card .card-body .players .player-profile .img-profile{
   width: 50px;
+  height: 50px;
   float: left;
 }
 

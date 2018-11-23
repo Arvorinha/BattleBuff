@@ -21,9 +21,12 @@ module.exports.salaID = function(importIO, app) {
   var pool = app.config.dbConnection;
   var salaDAO = new app.app.model.salaDAO(pool);
   var io = importIO;
+  var key = 'jogador';
+  var key2 = 'capitao';
 
   io.on('connection', function(socket) {
     console.log('jogador entrou');
+    socket.id = socket.id;
 
     //ao jogador entrar na partida enviar o id
     socket.on('room', function(room) {
@@ -52,10 +55,12 @@ module.exports.salaID = function(importIO, app) {
     //atualizar lista de jogadores na partida
     socket.on('list users', function(picks, time1, time2) {
       io.emit('list users', picks, time1, time2);
+      console.log('Atualizado lista de jogadores');
     });
 
     //receber dados do jogador
-    socket.on('new user', function(btrid, nome, img, rank, room) {
+    socket.on('new user', function(btrid, nome, img, rank) {
+      room = socket.room;
       socket.btrid = btrid;
       socket.img = img;
       socket.nome = nome;
@@ -63,8 +68,9 @@ module.exports.salaID = function(importIO, app) {
 
       var clients = io.sockets.adapter.rooms[room].sockets;
       var numClients = (typeof clients !== 'undefined') ? Object.keys(clients).length : 0;
-      var key = 'jogador';
-      var key2 = 'capitao';
+
+      //setar estado da sala
+      io.sockets.adapter.rooms[room].estado = 'espera';
 
       io.sockets.adapter.rooms[room].picks = {};
       io.sockets.adapter.rooms[room].picks[key] = [];
@@ -82,19 +88,130 @@ module.exports.salaID = function(importIO, app) {
         var data = {
           id: clientSocket.btrid,
           nome: clientSocket.nome,
-          rank: '6',
-          idimg: clientSocket.img
+          rank: clientSocket.rank,
+          idimg: clientSocket.img,
+          idsocket: clientSocket.id
         };
         io.sockets.adapter.rooms[room].picks[key].push(data);
       }
 
-      console.log(io.sockets.adapter.rooms[room].picks[key]);
+      //gerar capitaes ao chegar 6 jogadores na sala
+      if (io.sockets.adapter.rooms[room].picks[key].length == 6) {
+        //alterar estado da sala
+        io.sockets.adapter.rooms[room].estado = 'picks';
+        //setar pick time
+        io.sockets.adapter.rooms[room].picktime = 0;
+
+        capitao1 = [0, io.sockets.adapter.rooms[room].picks[key][0].rank];
+        capitao2 = [0, io.sockets.adapter.rooms[room].picks[key][0].rank];
+
+        for (var i = 1; i < io.sockets.adapter.rooms[room].picks[key].length; i++) {
+          if (io.sockets.adapter.rooms[room].picks[key][i].rank < capitao1[1]) {
+            capitao1[0] = i;
+            capitao1[1] = io.sockets.adapter.rooms[room].picks[key][i].rank;
+          }
+        }
+
+        io.sockets.adapter.rooms[room].time1[key2].push(io.sockets.adapter.rooms[room].picks[key][capitao1[0]]);
+
+        io.sockets.adapter.rooms[room].picks[key].splice(capitao1[0], 1);
+
+        for (var i = 1; i < io.sockets.adapter.rooms[room].picks[key].length; i++) {
+          if (io.sockets.adapter.rooms[room].picks[key][i].rank < capitao2[1]) {
+            if (io.sockets.adapter.rooms[room].picks[key][i].rank != capitao1[1]) {
+              capitao2[0] = i;
+              capitao2[1] = io.sockets.adapter.rooms[room].picks[key][i].rank;
+            }
+          }
+        }
+
+        io.sockets.adapter.rooms[room].time2[key2].push(io.sockets.adapter.rooms[room].picks[key][capitao2[0]]);
+
+        io.sockets.adapter.rooms[room].picks[key].splice(capitao2[0], 1);
+
+        //dar permicao para pickar
+        io.sockets.adapter.rooms[room].idCapitao1 = io.sockets.adapter.rooms[room].time1[key2][0].idsocket;
+        io.sockets.adapter.rooms[room].idCapitao2 = io.sockets.adapter.rooms[room].time2[key2][0].idsocket;
+        socketid = io.sockets.adapter.rooms[room].idCapitao1
+        console.log(socketid);
+        io.to(socketid).emit('permicao pick');
+        io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('turno', 1);
+        io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('turno', 0);
+        ///////////////////////////
+      }
 
       io.to(room).emit('list users',
         io.sockets.adapter.rooms[room].picks,
         io.sockets.adapter.rooms[room].time1,
         io.sockets.adapter.rooms[room].time2);
+    });
 
+    //permicao para fazer pick
+    socket.on('permicao pick', function() {
+      io.emit('permicao pick');
+    });
+
+    //fazer pick
+    socket.on('pick', function(btrid) {
+      console.log('PICK');
+
+      if (io.sockets.adapter.rooms[room].estado == 'picks') {
+
+        for (var i = 0; i < io.sockets.adapter.rooms[room].picks[key].length; i++) {
+          if (io.sockets.adapter.rooms[room].picks[key][i].id == btrid) {
+            console.log(btrid);
+            if (io.sockets.adapter.rooms[room].picktime == 0) {
+              console.log('foi pro 1 ' + io.sockets.adapter.rooms[room].picks[key][i].id);
+              io.sockets.adapter.rooms[room].time1[key].push(io.sockets.adapter.rooms[room].picks[key][i]);
+            } else {
+              console.log('foi pro 2 ' + io.sockets.adapter.rooms[room].picks[key][i].id);
+              io.sockets.adapter.rooms[room].time2[key].push(io.sockets.adapter.rooms[room].picks[key][i]);
+            }
+
+            io.sockets.adapter.rooms[room].picks[key].splice(i, 1);
+
+            io.to(room).emit('list users',
+              io.sockets.adapter.rooms[room].picks,
+              io.sockets.adapter.rooms[room].time1,
+              io.sockets.adapter.rooms[room].time2);
+
+            if (io.sockets.adapter.rooms[room].picks[key].length == 0) {
+              console.log('PARTIDA COMECOU');
+
+              io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('turno', 3);
+              io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('turno', 3);
+
+              //alterar estado da sala
+              io.sockets.adapter.rooms[room].estado = 'jogando';
+
+              salaDAO.updateStatusByIdSala(room, 2, function(error, results, fields) {
+                if (error) {
+                  console.log(error);
+                  return
+                } else
+                  console.log('status da sala atualizada para Em jogo');
+              });
+              return
+            }
+
+            if (io.sockets.adapter.rooms[room].picktime == 0) {
+              io.sockets.adapter.rooms[room].picktime = 1;
+              io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('permicao pick');
+
+              //atualizar alert de turno pra escolher
+              io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('turno', 1);
+              io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('turno', 0);
+            } else {
+              io.sockets.adapter.rooms[room].picktime = 0;
+              io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('permicao pick');
+
+              //atualizar alert de turno pra escolher
+              io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('turno', 1);
+              io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('turno', 0);
+            }
+          }
+        }
+      }
     });
 
     //ao jogador desconectar da partida
@@ -113,6 +230,18 @@ module.exports.salaID = function(importIO, app) {
             console.log('sala deletada ao um usuario sair');
         });
       } else {
+
+        for (var i = 1; i < io.sockets.adapter.rooms[room].picks['jogador'].length; i++) {
+          if (io.sockets.adapter.rooms[room].picks['jogador'][i].id == socket.btrid) {
+            io.sockets.adapter.rooms[room].picks['jogador'].splice(i, 1);
+          }
+        }
+
+        io.to(room).emit('list users',
+          io.sockets.adapter.rooms[room].picks,
+          io.sockets.adapter.rooms[room].time1,
+          io.sockets.adapter.rooms[room].time2);
+
         clients = io.sockets.adapter.rooms[room].sockets;
         numClients = Object.keys(clients).length;
         //atualizar a contagem de jogadores no banco
@@ -157,72 +286,66 @@ module.exports.sala = function(app, req, res) {
 
 
 module.exports.entrarSala = function(app, req, res) {
-  // verificarPermicao (req, function (err) {
-  //   if (err)
-  //     res.redirect('/');
-  //   else {
-  //     var pool = app.config.dbConnection;
-  //     var salaDAO = new app.app.model.salaDAO(pool);
-  //     console.log(req.params.sala);
-  //     salaDAO.findById(req.params.sala, function(error, results, fields){
-  //       if(error){
-  //         console.log(error);
-  //         return
-  //       }
-  //       else {
-  //         if(results.length >= 1){
-  //           res.render('checksala', {
-  //             sala : req.params.sala,
-  //             session:req.session
-  //           });
-  //         }else {
-  res.render('partida', {
-    session: req.session,
-    btrid: 1213123,
-    img: 2332,
-    nick: 'Balaco'
-  });
-  //         }
-  //       }
-  //     });
-  //   }
-  // });
-}
-
-module.exports.checarSala = function(app, req, res) {
   verificarPermicao(req, function(err) {
     if (err)
       res.redirect('/');
     else {
-      var request = require('request');
-
-      if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
-        return res.json({
-          "responseError": "Please select captcha first"
-        });
-      }
-      const secretKey = "6LeNJnAUAAAAAEmge1THTYE0YavVuuCTYM4-2xUr";
-
-      const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-
-      request(verificationURL, function(error, response, body) {
-        body = JSON.parse(body);
-
-        if (body.success !== undefined && !body.success) {
-          res.render('checksala', {
-            erros: "",
-            sala: req.params.sala,
-            session: req.session
-          });
-          return;
+      var pool = app.config.dbConnection;
+      var salaDAO = new app.app.model.salaDAO(pool);
+      console.log(req.params.sala);
+      salaDAO.findById(req.params.sala, function(error, results, fields) {
+        if (error) {
+          console.log(error);
+          return
         }
-        res.render('partida', {
-          session: req.session
-        });
+        if (results.length >= 1) {
+          if (results[0].QTD_JOGADORES < 6) {
+            res.render('partida', {
+              session: req.session
+            });
+          } else
+            res.send('Sala está cheia');
+        } else
+          res.send('Sala não existe');
       });
     }
   });
 }
+
+// module.exports.checarSala = function(app, req, res) {
+//   verificarPermicao(req, function(err) {
+//     if (err)
+//       res.redirect('/');
+//     else {
+//       var request = require('request');
+//
+//       if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
+//         return res.json({
+//           "responseError": "Please select captcha first"
+//         });
+//       }
+//       const secretKey = "6LeNJnAUAAAAAEmge1THTYE0YavVuuCTYM4-2xUr";
+//
+//       const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+//
+//       request(verificationURL, function(error, response, body) {
+//         body = JSON.parse(body);
+//
+//         if (body.success !== undefined && !body.success) {
+//           res.render('checksala', {
+//             erros: "",
+//             sala: req.params.sala,
+//             session: req.session
+//           });
+//           return;
+//         }
+//         res.render('partida', {
+//           session: req.session
+//         });
+//       });
+//     }
+//   });
+// }
 
 module.exports.criarSala = function(app, req, res) {
   var nome = req.param('txtNome');
