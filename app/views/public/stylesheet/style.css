@@ -290,3 +290,41 @@ html, body {
 .log-in {
   margin: 10px;
 }
+
+.resultado {
+  border-top: 1px solid #484848;
+  border-bottom: 1px solid #484848;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.resultado .caixa {
+  width: 32%;
+  padding: 0px;
+  display: inline-block;
+  text-align: center;
+  font-size: 15px;
+  vertical-align: text-top;
+}
+
+.img-profile{
+  width: 70px;
+  height: 70px;
+}
+
+.name-profile {
+  display: block;
+}
+
+.card .card-body .time {
+  padding-top: 10px;
+  border-bottom: 1px solid #484848;
+}
+
+.card .card-body #win {
+}
+
+.card .card-body #lose {
+}
