@@ -185,6 +185,12 @@ socket.on('turno', function(seuturno) {
   }
 });
 
+socket.on('form resultado', function() {
+  document.getElementById("resultado").style.display = "block";
+  document.getElementById("resultado").innerHTML = '<span>Reportar resultado:</span><br><div class="caixa"><button type="button" class="btn btn-success" onclick="resultado(true);">Partida Concluida</button></div><div class="caixa"><button type="button" class="btn btn-danger" onclick="resultado(false);">Partida Cancelada</button></div>';
+});
+
+
 socket.on('permicao pick', function() {
   pickar = 1;
   // alert('Sua vez de pickar');
@@ -213,3 +219,16 @@ socket.on('list users', function(picksR, time1R, time2R) {
 function credencial(btrid, nick, img, rank) {
   socket.emit('new user', btrid, nick, img, rank);
 }
+
+
+function resultado(finalizado) {
+  socket.emit('report resultado', finalizado);
+}
+
+socket.on('resultado', function(matchid) {
+  if (matchid == 0) {
+    document.location.href = '/sala';
+  } else {
+    document.location.href = '/partida/' + matchid;
+  }
+});

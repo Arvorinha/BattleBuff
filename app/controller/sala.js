@@ -99,6 +99,15 @@ module.exports.salaID = function(importIO, app) {
       if (io.sockets.adapter.rooms[room].picks[key].length == 6) {
         //alterar estado da sala
         io.sockets.adapter.rooms[room].estado = 'picks';
+
+        salaDAO.updateStatusByIdSala(room, 2, function(error, results, fields) {
+          if (error) {
+            console.log(error);
+            return
+          } else
+            console.log('status da sala atualizada para Picks');
+        });
+
         //setar pick time
         io.sockets.adapter.rooms[room].picktime = 0;
 
@@ -175,16 +184,18 @@ module.exports.salaID = function(importIO, app) {
               io.sockets.adapter.rooms[room].time1,
               io.sockets.adapter.rooms[room].time2);
 
+            //alterar estado da sala para em jogo
             if (io.sockets.adapter.rooms[room].picks[key].length == 0) {
               console.log('PARTIDA COMECOU');
 
               io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('turno', 3);
               io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('turno', 3);
+              io.to(io.sockets.adapter.rooms[room].idCapitao1).emit('form resultado');
+              io.to(io.sockets.adapter.rooms[room].idCapitao2).emit('form resultado');
 
-              //alterar estado da sala
               io.sockets.adapter.rooms[room].estado = 'jogando';
 
-              salaDAO.updateStatusByIdSala(room, 2, function(error, results, fields) {
+              salaDAO.updateStatusByIdSala(room, 3, function(error, results, fields) {
                 if (error) {
                   console.log(error);
                   return
@@ -211,6 +222,16 @@ module.exports.salaID = function(importIO, app) {
             }
           }
         }
+      }
+    });
+
+    //finalizar partida
+    socket.on('report resultado', function(finalizado) {
+      if (finalizado) {
+        console.log('CONCLUIDO');
+      } else {
+        console.log('CANCELADO');
+        io.to(room).emit('resultado', 0);
       }
     });
 

@@ -68,10 +68,6 @@ html, body {
 
 /*----------------page-wrapper----------------*/
 
-.page-wrapper {
-    height: 100vh;
-}
-
 .page-wrapper .theme {
     width: 40px;
     height: 40px;

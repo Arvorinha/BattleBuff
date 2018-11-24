@@ -12,38 +12,47 @@
     <main class="page-content">
       <div class="container-fluid min-100">
         <h3>Salas Abertas</h3>
-        <table class="table">
-          <thead>
-            <tr class="table-light">
-              <form action="/criar-sala" method="post">
-                <th scope="col">Criar sala</th>
-                <th colspan="2" scope="col"><input class="form-control" name="txtNome" type="text"></th>
-                <th scope="col"><input value="Criar" class="btn btn-primary form-control" type="submit"></th>
-              </form>
-            </tr>
-            <tr class="table-light">
-              <th scope="col">Nome</th>
-              <th scope="col">Espaços</th>
-              <th scope="col">Estado</th>
-              <th scope="col"><input class="btn btn-primary form-control" type="button" value="Atualizar" onClick='parent.location="javascript:location.reload()"'></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% for (var i = 0; i < results.length; i++) { %>
-            <tr>
-              <th scope="row">
-                <%= results[i].NM_SALA %>
-              </th>
-              <td class="text-success">
-                <%= results[i].QTD_JOGADORES %>/6</td>
-              <td class="text-success">
-                <%= results[i].NM_STATUS %>
-              </td>
-              <td><a href="/sala/<%= results[i].ID_SALA %>" class="btn btn-outline-success form-control">Entrar</a></td>
-            </tr>
-            <% } %>
-          </tbody>
+
+        <table class="rwd-table">
+          <tr>
+            <form action="/criar-sala" method="post">
+              <th scope="col">Criar sala</th>
+              <th colspan="2" scope="col"><input class="form-control" name="txtNome" type="text"></th>
+              <th scope="col"><input value="Criar" class="btn btn-primary form-control" type="submit"></th>
+            </form>
+          </tr>
+          <tr>
+            <th>Nome</th>
+            <th>Espaços</th>
+            <th>Status</th>
+            <th><input class="btn btn-primary form-control" type="button" value="Atualizar" onClick='parent.location="javascript:location.reload()"'></th>
+          </tr>
+          <% if (results.length == 0) { %>
+          <tr>
+            <td colspan="4" scope="col">
+              <center>Nenhuma Sala</center>
+            </td>
+          </tr>
+          <%}%>
+          <% for (var i = 0; i < results.length; i++) { %>
+          <tr>
+            <td>
+              <%= results[i].NM_SALA %>
+            </td>
+            <td>
+              <%= results[i].QTD_JOGADORES %>/6</td>
+            <td>
+              <%= results[i].NM_STATUS %>
+            </td>
+            <%if (results[i].NM_STATUS == 'Aguardando') {%>
+            <td><a href="/sala/<%= results[i].ID_SALA %>" class="btn btn-success form-control">Entrar</a></td>
+            <%}else {%>
+              <td><a href="#" class="btn btn form-control">Entrar</a></td>
+              <%}%>
+          </tr>
+          <% } %>
         </table>
+
         <h3>Salas Finalizadas</h3>
         <table class="table">
           <thead>

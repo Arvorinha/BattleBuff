@@ -43,9 +43,10 @@ salaDAO.prototype.findAll = function(cb) {
     if (err) {
       throw err;
     }
-    var query = "SELECT a.ID_SALA, a.NM_SALA , a.QTD_JOGADORES, b.NM_STATUS ";
+    var query = "SELECT a.ID_SALA, a.NM_SALA , a.QTD_JOGADORES, b.NM_STATUS, a.ID_STATUS ";
     query += "FROM TB_SALA a ";
-    query += "INNER JOIN TB_STATUS b ON a.ID_STATUS = b.ID_STATUS"
+    query += "INNER JOIN TB_STATUS b ON a.ID_STATUS = b.ID_STATUS ";
+    query += "WHERE a.ID_STATUS < 4";
     connection.query(query, cb, connection.release());
   })
 }
@@ -55,7 +56,7 @@ salaDAO.prototype.findById = function(id, cb) {
     if (err) {
       throw err;
     }
-    connection.query('SELECT * FROM TB_SALA WHERE ID_SALA = ? AND ID_STATUS = 1', [id], cb, connection.release());
+    connection.query('SELECT * FROM TB_SALA WHERE ID_SALA = ?', [id], cb, connection.release());
   })
 }
 
