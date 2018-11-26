@@ -27,100 +27,65 @@
             <th>Status</th>
             <th><input class="btn btn-primary form-control" type="button" value="Atualizar" onClick='parent.location="javascript:location.reload()"'></th>
           </tr>
-          <% if (results.length == 0) { %>
+          <% if (finalizadas.length == 0) { %>
           <tr>
             <td colspan="4" scope="col">
               <center>Nenhuma Sala</center>
             </td>
           </tr>
           <%}%>
-          <% for (var i = 0; i < results.length; i++) { %>
-          <tr>
-            <td>
-              <%= results[i].NM_SALA %>
-            </td>
-            <td>
-              <%= results[i].QTD_JOGADORES %>/6</td>
-            <td>
-              <%= results[i].NM_STATUS %>
-            </td>
-            <%if (results[i].NM_STATUS == 'Aguardando') {%>
-            <td><a href="/sala/<%= results[i].ID_SALA %>" class="btn btn-success form-control">Entrar</a></td>
-            <%}else {%>
-              <td><a href="#" class="btn btn form-control">Entrar</a></td>
+          <% for (var i = 0; i < finalizadas.length; i++) { %>
+            <tr>
+              <td>
+                <%= finalizadas[i].NM_SALA %>
+              </td>
+              <td>
+                <%= finalizadas[i].QTD_JOGADORES %>/6</td>
+              <td>
+                <%= finalizadas[i].NM_STATUS %>
+              </td>
+              <%if (finalizadas[i].NM_STATUS == 'Aguardando') {%>
+              <td><a href="/sala/<%= finalizadas[i].ID_SALA %>" class="btn btn-success form-control">Entrar</a></td>
+              <%}else {%>
+                <td><a href="#" class="btn btn form-control">Entrar</a></td>
               <%}%>
-          </tr>
+            </tr>
           <% } %>
         </table>
 
         <h3>Salas Finalizadas</h3>
-        <table class="table">
-          <thead>
-            <tr class="table-light">
+        <table class="rwd-table">
+          <!--
+            <tr>
               <form>
                 <th scope="col">Buscar partidas</th>
                 <th colspan="2" scope="col"><input class="form-control" type="text"></th>
-                <th scope="col"><input class="btn btn-primary form-control" type="submit"></th>
+                <th scope="col"><input class="btn btn-primary form-control" type="submit" value="Pesquisar"></th>
               </form>
             </tr>
-            <tr class="table-light">
+          -->
+            <tr>
               <th scope="col">Código</th>
               <th scope="col">Nome</th>
-              <th scope="col">Dono da Sala</th>
               <th scope="col">Data</th>
+              <th scope="col">Status</th>
             </tr>
-          </thead>
-          <tbody>
+            <% if (naoFinalizadas.length == 0) { %>
             <tr>
-              <th scope="row">2958327895357</th>
-              <td>Sala do Tetis</td>
-              <td>Techzz</td>
-              <td>10/11/2018</td>
+              <td colspan="4" scope="col">
+                <center>Nenhuma Sala</center>
+              </td>
             </tr>
-            <tr>
-              <th scope="row">2958327395357</th>
-              <td>Sala do Jonais</td>
-              <td>Jonais</td>
-              <td>10/11/2018</td>
-            </tr>
-            <tr>
-              <th scope="row">2958327395357</th>
-              <td>Sala do Jonais</td>
-              <td>Jonais</td>
-              <td>10/11/2018</td>
-            </tr>
-            <tr>
-              <th scope="row">2958327395357</th>
-              <td>Sala do Jonais</td>
-              <td>Jonais</td>
-              <td>10/11/2018</td>
-            </tr>
-            <tr>
-              <th scope="row">2958327395357</th>
-              <td>Sala do Jonais</td>
-              <td>Jonais</td>
-              <td>10/11/2018</td>
-            </tr>
-          </tbody>
+            <%}%>
+            <% for (var i = 0; i < naoFinalizadas.length; i++) { %>
+                <tr>
+                  <td><%= naoFinalizadas[i].BTRID_PARTIDA%></td>
+                  <td><%= naoFinalizadas[i].NM_SALA%></td>
+                  <td><%= moment(naoFinalizadas[i].DT_PARTIDA).subtract(2, 'hours').startOf('minutes').fromNow()%></td>
+                  <td><%= naoFinalizadas[i].NM_STATUS%></td>
+                </tr>
+            <% } %>
         </table>
-        <nav aria-label="pagination example">
-          <ul class="pagination justify-content-end">
-            <!--Previous button-->
-            <li class="page-item disabled">
-              <a class="page-link bg-light" href="#" tabindex="-1">Previous</a>
-            </li>
-
-            <!--Numbers-->
-            <li class="page-item"><a class="page-link bg-light" href="#">1</a></li>
-            <li class="page-item"><a class="page-link bg-light" href="#">2</a></li>
-            <li class="page-item"><a class="page-link bg-light" href="#">3</a></li>
-
-            <!--Next button-->
-            <li class="page-item">
-              <a class="page-link bg-light" href="#">Next</a>
-            </li>
-          </ul>
-        </nav>
       </div>
   </div>
   <% include includes/footer.ejs %>
