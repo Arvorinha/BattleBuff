@@ -240,6 +240,33 @@ module.exports.salaID = function(importIO, app) {
         roomVar.estado = 'cancelado';
         io.to(room).emit('resultado', 0);
 
+        // salaDAO.insertPick(roomVar.time1[key2].id, room, 2, function(error, results, fields) {
+        //   if (error) {
+        //     console.log(error);
+        //     return
+        //   } else
+        //     console.log('jogador capitão insert');
+        // });
+        // salaDAO.insertPick(roomVar.time2[key2].id, room, 2, function(error, results, fields) {
+        //   if (error) {
+        //     console.log(error);
+        //     return
+        //   } else
+        //     console.log('jogador capitão insert');
+        // });
+        //
+        // var clients = roomVar.sockets;
+        // for (var clientId in clients) {
+        //   var clientSocket = io.sockets.connected[clientId];
+        //   salaDAO.insertPick(clientSocket.btrid, room, 1, function(error, results, fields) {
+        //     if (error) {
+        //       console.log(error);
+        //       return
+        //     } else
+        //       console.log('jogador comum insert');
+        //   });
+        // }
+
         salaDAO.updateStatusByIdSala(room, 5, function(error, results, fields) {
           if (error) {
             console.log(error);
@@ -296,6 +323,7 @@ module.exports.salaID = function(importIO, app) {
 
         clients = roomVar.sockets;
         numClients = Object.keys(clients).length;
+
         //atualizar a contagem de jogadores no banco
         salaDAO.updateJogadoresByIdSala(room, numClients, function(error, results, fields) {
           if (error) {
@@ -337,7 +365,7 @@ module.exports.sala = function(app, req, res) {
                 naoFinalizadas: findAllFinalizadas,
                 sala: req.params.sala,
                 session: req.session,
-                moment:moment
+                moment: moment
               });
             }
           });

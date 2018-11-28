@@ -11,6 +11,17 @@ salaDAO.prototype.insert = function(nome, cb) {
   })
 }
 
+salaDAO.prototype.insertPick = function(btrid, tpJogador, room, cb) {
+  this._pool().getConnection((err, connection) => {
+    if (err) {
+      throw err;
+    }
+    var query = 'INSERT INTO TB_PICK(ID_JOGADOR, ID_SALA, ID_TP_JOGADOR)';
+    query += 'VALUES((SELECT ID_JOGADOR FROM TB_JOGADOR WHERE BTRID = "?"), ?, ?)';
+    connection.query(query, [btrid, room, tpJogador], cb, connection.release());
+  })
+}
+
 salaDAO.prototype.updateJogadoresByIdSala = function(id, jogadores, cb) {
   this._pool().getConnection((err, connection) => {
     if (err) {
@@ -74,10 +85,11 @@ salaDAO.prototype.findAll2 = function(cb) {
     if (err) {
       throw err;
     }
-    var query = "SELECT a.BTRID_PARTIDA, DT_PARTIDA, a.ID_SALA, a.NM_SALA , a.QTD_JOGADORES, b.NM_STATUS, a.ID_STATUS ";
+    var query = "SELECT a.BTRID_PARTIDA, a.DT_PARTIDA, a.ID_SALA, a.NM_SALA , a.QTD_JOGADORES, b.NM_STATUS, a.ID_STATUS ";
     query += "FROM TB_SALA a ";
     query += "INNER JOIN TB_STATUS b ON a.ID_STATUS = b.ID_STATUS ";
-    query += "WHERE a.ID_STATUS > 4 LIMIT 5";
+    query += "WHERE a.ID_STATUS > 4 ";
+    query += "ORDER BY a.DT_PARTIDA DESC LIMIT 5";
     connection.query(query, cb, connection.release());
   })
 }
