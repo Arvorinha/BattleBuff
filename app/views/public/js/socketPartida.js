@@ -187,7 +187,7 @@ socket.on('turno', function(seuturno) {
 
 socket.on('form resultado', function() {
   document.getElementById("resultado").style.display = "block";
-  document.getElementById("resultado").innerHTML = '<span>Reportar resultado:</span><br><div class="caixa"><button type="button" class="btn btn-success" onclick="resultado(true);">Partida Concluida</button></div><div class="caixa"><button type="button" class="btn btn-danger" onclick="resultado(false);">Partida Cancelada</button></div>';
+  document.getElementById("resultado").innerHTML = '<span>Reportar resultado:</span><br><div class="caixa"><button type="button" class="btn btn-success" onclick="resultado(true);">Partida Concluída</button></div><div class="caixa"><button type="button" class="btn btn-danger" onclick="resultado(false);">Partida Cancelada</button></div>';
 });
 
 
