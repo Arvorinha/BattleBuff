@@ -2,6 +2,15 @@ function JogadorDAO(pool){
   this._pool = pool;
 }
 
+JogadorDAO.prototype.findByBtrid = function (btrid,cb) {
+  this._pool().getConnection(function (err,connection) {
+    if (err) {
+      throw err;
+    }
+    connection.query('SELECT ID_JOGADOR FROM TB_JOGADOR WHERE BTRID = ?',[btrid],cb,connection.release());
+  })
+};
+
 JogadorDAO.prototype.findByRank = function (min,cb) {
   this._pool().getConnection(function (err,connection) {
     if (err) {

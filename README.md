@@ -4,7 +4,7 @@ Battlerite inhouse
 
 **Authors**<br>
 * Breno Nunes Galvão breno.nunesgalvao@gmail.com<br>
-* Matheus Roberto de Jesus Batista<br>
+* Matheus Roberto de Jesus Batista matheus_roberto_batista@hotmail.com<br>
 * Tayna Nunes Galvão taynanunesgalvao@gmail.com<br>
 
 **Copyright (C) [2018] [Kobat]**
