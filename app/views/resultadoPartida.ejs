@@ -1,0 +1,104 @@
+<!doctype HTML>
+<html lang="pt">
+
+<head>
+  <% include includes/header.ejs %>
+  <link rel="stylesheet" href="../stylesheet/match-table.css">
+  <title>BattleBuff - Partida</title>
+</head>
+
+<body>
+
+  <div class="page-wrapper chiller-theme toggled">
+    <% include includes/side-bar.ejs %>
+    <main class="page-content">
+      <div class="container-fluid min-100">
+        <div class="headermatch">
+          <center>
+            <div class="cell">
+              MatchID :
+              <%= match[0].matchID%>
+            </div>
+            <div class="cell">
+              Duração Total :
+              <%= match[0].duracao%>seg
+            </div>
+            <div class="cell">
+              Total de Rounds:
+              <%= match[0].roundsTotal%>
+            </div>
+          </center>
+        </div>
+        <%for (let i = 0; i < match.times.length; i++) {
+          time = match.times[i];%>
+        <div class="table">
+          <%if(time.timeWonStatus == 'true') {%>
+          <div class="row header green">
+            <%} else {%>
+            <div class="row header">
+              <%}%>
+              <div class="cell">
+                Player
+              </div>
+              <div class="cell">
+                K/D
+              </div>
+              <div class="cell">
+                Dano
+              </div>
+              <div class="cell">
+                Cura
+              </div>
+              <div class="cell">
+                Controle
+              </div>
+              <div class="cell">
+                Energia
+              </div>
+              <div class="cell">
+                Score
+              </div>
+            </div>
+            <%for(let i = 0; i < time.jogadores.length; i++) {
+              jogador = time.jogadores[i];%>
+              <div class="row">
+                <div class="cell">
+                  <img src="https://battle-rite.com/assets/gamedata/<%= jogador.heroIcon%>.png" width="40">
+                  <%= jogador.jogadorNome%>
+                </div>
+                <div class="cell">
+                  <%= jogador.kills%>/<%= jogador.deaths%>
+                </div>
+                <div class="cell">
+                  <%= jogador.dano%>/<%= jogador.dadoR%>
+                </div>
+                <div class="cell">
+                  <%= jogador.cura%>/<%= jogador.curaR%>
+                </div>
+                <div class="cell">
+                  <%= jogador.controle%>/<%= jogador.controleR%>
+                </div>
+                <div class="cell">
+                  <%= jogador.energia%>/<%= jogador.energiaR%>
+                </div>
+                <div class="cell">
+                  <%= jogador.score%>
+                </div>
+              </div>
+            <%}%>
+          </div>
+          <div class="headermatch table-footer">
+            <center>
+            <div class="cell">
+              Total de Rounds Ganhos : <%= time.roundsGanhos%>
+            </div>
+          </center>
+          </div>
+          <%}%>
+        </div>
+        <% include includes/footer.ejs %>
+    </main>
+  </div>
+</body>
+
+</html>
