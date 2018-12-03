@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+
+<head>
+  <%include includes/header%>
+</head>
+
+<style media="screen">
+  .bordinha{
+    border-bottom: 3px solid red;
+  }
+  .nav-pills > li > a {
+    border-radius: 0px;
+  }
+
+  .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8,
+  .col-md-9, .col-md-10, .col-md-11, .col-md-12, .pagination>li>a, .pagination>li>span{
+    position: unset;
+  }
+</style>
+
+<body>
+  <div class="page-wrapper chiller-theme toggled">
+    <%include includes/side-bar%>
+    <main class="page-content">
+      <div class="container-fluid min-100">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6">
+              <h2>Historico de partidas:</h2>
+              <table class="rwd-table">
+                <tr>
+                  <th>Nome da sala</th>
+                  <th>Data da partida</th>
+                  <th>Código da sala</th>
+                </tr>
+                <tr>
+                  <%for(var i = 0 ; i < partidas.length ; i++){%>
+                    <td><%=partidas[i].NM_SALA%></td>
+                    <td><%=moment(partidas[i].DT_PARTIDA).format('DD/MM/YYYY')%></td>
+                    <td><%=partidas[i].BTRID_SALA%></td>
+                  <%}%>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <img src="https://battlerite.club/_Assets/images/avatar/<%=jogador[0]%>.png" width="250px" class="mx-auto d-block" alt="imgPerfil" style="border-radius:50%">
+              <div class="col-md-6 col-md-offset-1" style="margin-top:10px">
+                <h4>Nick: <%=jogador[1]%></h4>
+                <h5>Liga: <%=jogador[2]%></h5>
+                <h5>Titulo: <%=jogador[3]%> </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% include includes/footer.ejs %>
+    </main>
+
+  </div>
+</body>
+
+</html>
