@@ -8,11 +8,11 @@ html, body {
   min-height: 100vh;
 }
 
-.logo-header{
+.logo-header {
   width: 100%;
 }
 
-.form-inline{
+.form-inline {
   text-align: center;
   margin-top: 10px;
 }
@@ -24,27 +24,27 @@ html, body {
   margin: auto;
 }
 
-.active-key input{
+.active-key input {
   width: 75% !important;
   display: inline-block !important;
   vertical-align: middle !important;
 }
 
-.pagina{
+.pagina {
   padding-top: 30px;
 }
 
-.game{
+.game {
   width: 100%;
 }
 
-.head{
+.head {
   width: 100px;
   height: 100px;
   float: left;
 }
 
-.head img{
+.head img {
   height: 100px;
 }
 
@@ -59,25 +59,22 @@ html, body {
   font-size: 25px;
 }
 
-.body .salas{
+.body .salas {
   vertical-align: text-bottom;
   font-size: 15px;
   margin-left: 10px;
-
 }
 
-.body form button{
+.body form button {
   margin-top: 10px;
 }
 
-.body .error{
+.body .error {
   display: block;
   margin-top: 15px;
 }
 
-
 /*profile card side bar*/
-
 .side-bar {
   padding-top: 30px;
   padding-bottom: 30px;
@@ -126,7 +123,6 @@ html, body {
 }
 
 /*player tabela card*/
-
 .player-tabela-body {
   padding: 6px;
   padding-bottom: 12px;
@@ -137,11 +133,11 @@ html, body {
   height: 50px;
 }
 
-.player .avatar{
+.player .avatar {
   float: left;
 }
 
-.player .dados{
+.player .dados {
   margin-left: 56px;
 }
 
@@ -150,7 +146,6 @@ html, body {
   height: 50px;
 }
 
-
 .player-tabela .card-header {
   font-size: 24px;
   line-height: 20px;
@@ -158,9 +153,7 @@ html, body {
   white-space: nowrap;
 }
 
-
 /*CARD PARIDA*/
-
 .card {
   border-radius: 10px;
   border: 1px solid #484848;
@@ -183,7 +176,7 @@ html, body {
   color: #8A8A8A;
 }
 
-.card .card-subheader .card-tabela{
+.card .card-subheader .card-tabela {
   width: 32%;
   text-align: center;
   padding: 5px;
@@ -200,7 +193,7 @@ html, body {
   text-align: center;
 }
 
-.card .card-body .players{
+.card .card-body .players {
   width: 32%;
   padding: 0px;
   display: inline-block;
@@ -225,64 +218,65 @@ html, body {
   color: #8E8E8E;
 }
 
-#time1 .player-profile:hover{
+#time1 .player-profile:hover {
   color: #189AD3;
   background-color: #242424;
   cursor: pointer;
 }
 
-#time2 .player-profile:hover{
+#time2 .player-profile:hover {
   color: #FF7B7B;
   background-color: #242424;
   cursor: pointer;
 }
 
-#picks .player-profile:hover{
+#picks .player-profile:hover {
   color: #77AB59;
   background-color: #242424;
   cursor: pointer;
 }
 
-#picks .player-profile:hover > .img-profile {
+#picks .player-profile:hover>.img-profile {
   filter: grayscale(0%);
 }
 
-.capitao{
-    background-image: url(../imgs/brilliant.png) !important;
-    background-clip: border-box !important;
-    background-origin: padding-box !important;
-    background-attachment: scroll !important;
-    background-repeat: repeat !important;
-    background-size: auto !important;
-    background-position: left top !important;
+.capitao {
+  background-image: url(../imgs/brilliant.png) !important;
+  background-clip: border-box !important;
+  background-origin: padding-box !important;
+  background-attachment: scroll !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-position: left top !important;
 }
 
-.player-profile:last-of-type{
+.player-profile:last-of-type {
   border: 0px;
   min-height: 50px;
 }
 
-.card .card-body .players .player-profile .img-profile{
+.card .card-body .players .player-profile .img-profile {
   width: 50px;
   height: 50px;
   float: left;
 }
 
-#picks .img-profile{
+#picks .img-profile {
   filter: grayscale(40%);
 }
 
-.card .card-body .players .player-profile .img-icon{
+.card .card-body .players .player-profile .img-icon {
   width: 20px;
   float: left;
   z-index: 1;
   position: absolute;
 }
 
-.card .card-body .players .player-profile .profile-itens{
+.card .card-body .players .player-profile .profile-itens {
   padding-top: 5px;
 }
-.card .card-body .players .player-profile .profile-itens .item{
+
+.card .card-body .players .player-profile .profile-itens .item {
   display: block;
   margin-left: 55px;
   line-height: normal;
@@ -301,31 +295,65 @@ html, body {
   margin-top: 10px;
 }
 
-.resultado .caixa {
-  width: 32%;
-  padding: 0px;
-  display: inline-block;
-  text-align: center;
+/*PROFILE*/
+.profile-header {
+  background-color: #1D1D1D;
+  border: solid 1px #2B2B2B;
+}
+
+.profile-img {
+  float: left;
+  width: 90px;
+}
+
+.player-name, .player-title {
+  margin-left: 5px;
+  line-height: 1.6;
+  font-weight: bold;
+  font-size: 19px;
+}
+
+.player-title {
+  font-weight: normal;
+  line-height: normal;
   font-size: 15px;
-  vertical-align: text-top;
 }
 
-.img-profile{
-  width: 70px;
-  height: 70px;
+.player-status-wrap {
+  float: right;
 }
 
-.name-profile {
+.player-status {
+  display: inline-block;
+  width: 120px;
+  vertical-align: middle;
+  align-items: center;
+  text-align: center;
+  margin: 4px 0 0 8px;
+}
+
+.status-title {
+  font-weight: bold;
+}
+
+.profile-footer {
   display: block;
+  margin: auto;
+  height: 70px;
+  vertical-align: middle;
+  align-items: center;
+  text-align: center;
 }
 
-.card .card-body .time {
-  padding-top: 10px;
-  border-bottom: 1px solid #484848;
+.profile-footer .title {
+  font-weight: bold;
 }
 
-.card .card-body #win {
+.rank {
+  font-weight: bold;
+  font-size: 25px;
 }
 
-.card .card-body #lose {
+.league-img, .hero-img {
+  height: 70px;
 }
