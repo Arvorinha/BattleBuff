@@ -4,6 +4,7 @@
   "description": "Battlerite inhouse",
   "main": "app.js",
   "scripts": {
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matheus Roberto de Jesus Batista, Breno Nunes Galvão",
