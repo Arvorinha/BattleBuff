@@ -24,7 +24,7 @@ app.use(expressSession({
 }));
 app.use(steam.middleware({
     realm: 'http://battlebuff-breno-projects.7e14.starter-us-west-2.openshiftapps.com', //http://localhost:5000
-    verify: 'http://battlebuff-breno-projects.7e14.starter-us-west-2.openshiftapps.com', //http://localhost:5000
+    verify: 'http://battlebuff-breno-projects.7e14.starter-us-west-2.openshiftapps.com/verify', //http://localhost:5000/verify
     apiKey: '69FC736459FCC5094E6CE76DCD0A466D'}
 ));
 

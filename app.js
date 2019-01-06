@@ -2,7 +2,7 @@ var app = require('./config/server');
 //var home = require('./app/routes/steam/home')(app);
 //var home = require('./app/routes/steam/auth')(app);
 //var home = require('./app/routes/steam/verify')(app);
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000;
 var ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
 var http = require('http').Server(app);
