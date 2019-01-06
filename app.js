@@ -9,11 +9,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.app.controller.sala.salaID(io, app);
 
-app.listen(port, ip);
-console.log('Server running on http://%s:%s', ip, port);
-// http.listen(port, ip, function() {
-//   console.log('Server running on http://%s:%s', ip, port);
-// });
+http.listen(port, ip, function() {
+  console.log('Server running on http://%s:%s', ip, port);
+});
 // app.listen(port, () => console.log(`Servidor Rodando na porta ${ port }`));
 // app.listen(port, ip);
 // console.log('Server running on http://%s:%s', ip, port);
