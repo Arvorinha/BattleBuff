@@ -23,8 +23,8 @@ app.use(expressSession({
    cookie: { maxAge: 10080000 }
 }));
 app.use(steam.middleware({
-    realm: 'http://localhost:5000/',
-    verify: 'http://localhost:5000/verify',
+    realm: 'http://battlebuff-breno-projects.7e14.starter-us-west-2.openshiftapps.com', //http://localhost:5000
+    verify: 'http://battlebuff-breno-projects.7e14.starter-us-west-2.openshiftapps.com', //http://localhost:5000
     apiKey: '69FC736459FCC5094E6CE76DCD0A466D'}
 ));
 
