@@ -11,7 +11,7 @@
     <div class="sidebar-header">
       <%if(session.autenticado){%>
       <div class="user-pic">
-        <a href="#"><img class="img-responsive img-rounded" src="<%= ('https://battlerite.club/_Assets/images/avatar/' + session.img + '.png') %>" alt="User picture"></a>
+        <a href="#"><img class="img-responsive img-rounded" src="<%= 'imgs/btr-images/' + session.img %>" alt="User picture"></a>
       </div>
       <div class="user-info">
         <span class="user-name"><a href="#">
@@ -23,13 +23,13 @@
       </div>
       <%} else{%>
       <div class="user-pic">
-        <a href="#"><img class="img-responsive img-rounded" src="https://d1u5p3l4wpay3k.cloudfront.net/battlerite_gamepedia_en/f/f1/Avatar_DefaultAvatar.png" alt="User picture"></a>
+        <a href="#"><img class="img-responsive img-rounded" src="imgs/btr-images/30000" alt="User picture"></a>
       </div>
       <div class="user-info">
-        <span class="user-name"><a href="#">...</a></span>
-        <span class="user-role">Hero of BoulderPass</span>
+        <span class="user-name"><a href="#">Name</a></span>
+        <span class="user-role">Title</span>
         <span class="user-status">
-          <span>Diamond League</span>
+          <span>League</span>
         </span>
       </div>
       <%}%>

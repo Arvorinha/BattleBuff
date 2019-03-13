@@ -25,7 +25,7 @@ app.use(expressSession({
 app.use(steam.middleware({
     realm: 'http://localhost:5000', //http://localhost:5000
     verify: 'http://localhost:5000/verify', //http://localhost:5000/verify
-    apiKey: '69FC736459FCC5094E6CE76DCD0A466D'}
+    apiKey: '6FD94CF61466A4FFB1277B7A8249BA8A'}
 ));
 
 app.use(expressFileUploader());
